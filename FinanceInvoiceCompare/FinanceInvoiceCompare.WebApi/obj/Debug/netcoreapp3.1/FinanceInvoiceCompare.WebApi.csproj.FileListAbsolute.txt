@@ -1,0 +1,10 @@
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\bin\Debug\netcoreapp3.1\appsettings.json
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\bin\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.exe
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.csprojAssemblyReference.cache
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.AssemblyInfoInputs.cache
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.AssemblyInfo.cs
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.RazorTargetAssemblyInfo.cache
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\staticwebassets\FinanceInvoiceCompare.WebApi.StaticWebAssets.Manifest.cache
+C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\obj\Debug\netcoreapp3.1\staticwebassets\FinanceInvoiceCompare.WebApi.StaticWebAssets.xml

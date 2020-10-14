@@ -1,5 +1,5 @@
 {
-  "name": "best-practice-web",
+  "name": "finance-invoice-compare-web",
   "version": "1.0.0",
   "description": "A vue admin management with Element UI & axios & iconfont & permission control & lint",
   "author": "xuyi <994080906@qq.com>",
@@ -44,7 +44,7 @@
     "babel-jest": "23.6.0",
     "chalk": "2.4.2",
     "connect": "3.6.6",
-    "eslint": "5.15.3",
+    "eslint": "^5.15.3",
     "eslint-plugin-vue": "5.2.2",
     "html-webpack-plugin": "3.2.0",
     "node-sass": "^4.9.0",

@@ -8,10 +8,3 @@ export function login(params) {
   })
 }
 
-export function getSiteList(params) {
-  return request({
-    url: '/login/getSiteList',
-    method: 'get',
-    params
-  })
-}

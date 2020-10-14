@@ -11,6 +11,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Newtonsoft.Json;
+using FinanceInvoiceCompare.WebApi.IService;
+using FinanceInvoiceCompare.WebApi.Service;
+using Microsoft.OpenApi.Models;
+using System.IO;
+using System;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace FinanceInvoiceCompare.WebApi
 {
@@ -66,9 +72,20 @@ namespace FinanceInvoiceCompare.WebApi
                 });
             });
 
+            #region 注册配置文件
+            services.Configure<LDAPOptions>(Configuration.GetSection("LDAP"));
+            services.Configure<JwtOptions>(Configuration.GetSection("Authentication:JwtBearer:JwtOptions"));
+     
+            #endregion
 
+
+            #region 注册服务
+            services.AddScoped<IJwtSerivce, JwtService>();
+            services.AddScoped<ILDAPService, LDAPService>();
+            #endregion
+
+            #region 注册JWT验证的服务及参数
             JwtOptions jwtOptions = Configuration.GetSection("Authentication:JwtBearer:JwtOptions").Get<JwtOptions>();
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -96,6 +113,42 @@ namespace FinanceInvoiceCompare.WebApi
                     RequireExpirationTime = true //过期时间
                 };
             });
+            #endregion
+
+
+            #region 注册Swaager服务
+            services.AddSwaggerGen(option =>
+            {
+                option.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "FinanceInvoiceCompare",
+                    Description = "API",
+                    Contact = new OpenApiContact() { Name = "XuYi", Email = "yi_xu5@jabil.com" }
+                });
+
+                // include document file
+                option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "FinanceInvoiceCompare.WebApi.xml"), true);
+
+
+                #region Token绑定到ConfigureServices
+                // 开启加权小锁
+                option.OperationFilter<AddResponseHeadersFilter>();
+                option.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                //在header中添加Token
+                option.OperationFilter<SecurityRequirementsOperationFilter>();
+                //添加jwt定义
+                option.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权 格式：Bearer {token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+                #endregion
+            });
+
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,6 +166,18 @@ namespace FinanceInvoiceCompare.WebApi
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+
+            //Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+            //Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint
+            app.UseSwaggerUI(option =>
+            {
+                option.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
+                //路径配置，设置为空，表示直接访问该文件
+                option.RoutePrefix = "";
+
+            });
 
             app.UseEndpoints(endpoints =>
             {

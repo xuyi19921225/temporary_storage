@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="CommonService\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinanceInvoiceCompare.Model\FinanceInvoiceCompare.WebApi.Model.csproj" />
+  </ItemGroup>
+
 </Project>

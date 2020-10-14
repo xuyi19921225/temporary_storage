@@ -11,5 +11,6 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public int Id { get; set; }
 
 
+
     }
 }

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Best Practice Web',
+  title: 'Finance Invoice Compare Web',
 
   /**
    * @type {boolean} true | false

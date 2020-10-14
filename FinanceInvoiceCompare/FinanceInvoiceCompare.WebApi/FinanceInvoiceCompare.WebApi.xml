@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FinanceInvoiceCompare.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.LoginController.#ctor(FinanceInvoiceCompare.WebApi.IService.IJwtSerivce,FinanceInvoiceCompare.WebApi.IService.ILDAPService)">
+            <summary>
+            构造函数
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.LoginController.Get(FinanceInvoiceCompare.WebApi.Model.LoginRequestModel)">
+            <summary>
+            获取Token
+            </summary>
+            <param name="model">账号信息</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

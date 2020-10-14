@@ -4,4 +4,17 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="CommonService\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FinanceInvoiceCompare.Common\FinanceInvoiceCompare.WebApi.Common.csproj" />
+    <ProjectReference Include="..\FinanceInvoiceCompare.IService\FinanceInvoiceCompare.WebApi.IService.csproj" />
+  </ItemGroup>
+
 </Project>

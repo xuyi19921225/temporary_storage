@@ -5,15 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="sqlSugarCore" Version="5.0.0.17" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="sqlSugarCore" Version="5.0.0.18" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FinanceInvoiceCompare.Common\FinanceInvoiceCompare.WebApi.Common.csproj" />
+    <ProjectReference Include="..\FinanceInvoiceCompare.Middlewares\FinanceInvoiceCompare.WebApi.Middlewares.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

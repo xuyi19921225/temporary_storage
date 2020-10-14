@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FinanceInvoiceCompare.IRepository\FinanceInvoiceCompare.WebApi.IRepository.csproj" />
+  </ItemGroup>
+
 </Project>

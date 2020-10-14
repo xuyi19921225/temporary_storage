@@ -1,5 +1,0 @@
-C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.Common\bin\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.Common.deps.json
-C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.Common\bin\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.Common.dll
-C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.Common\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.Common.csprojAssemblyReference.cache
-C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.Common\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.Common.AssemblyInfoInputs.cache
-C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.Common\obj\Debug\netcoreapp3.1\FinanceInvoiceCompare.WebApi.Common.AssemblyInfo.cs

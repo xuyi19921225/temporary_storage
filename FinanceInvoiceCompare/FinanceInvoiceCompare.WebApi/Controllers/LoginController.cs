@@ -30,7 +30,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<MessageModel<string>> Get([FromQuery]LoginRequestModel model)
+        public async Task<MessageModel<string>> GetToken([FromQuery]LoginRequestModel model)
         {
             //// 验证AD 账号
             if (_ladpUtility.ValidADUser(model))

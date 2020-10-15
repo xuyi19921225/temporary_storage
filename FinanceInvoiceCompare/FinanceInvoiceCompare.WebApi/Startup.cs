@@ -17,6 +17,8 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using System;
 using Swashbuckle.AspNetCore.Filters;
+using FinanceInvoiceCompare.WebApi.IRepository;
+using FinanceInvoiceCompare.WebApi.Repository;
 
 namespace FinanceInvoiceCompare.WebApi
 {
@@ -82,6 +84,7 @@ namespace FinanceInvoiceCompare.WebApi
             #region 注册服务
             services.AddScoped<IJwtSerivce, JwtService>();
             services.AddScoped<ILDAPService, LDAPService>();
+            services.AddScoped<IUserRepository, UserRepository>();
             #endregion
 
             #region 注册JWT验证的服务及参数

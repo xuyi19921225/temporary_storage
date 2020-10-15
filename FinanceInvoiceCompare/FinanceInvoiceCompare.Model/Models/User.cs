@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FinanceInvoiceCompare.WebApi.Model
+﻿namespace FinanceInvoiceCompare.WebApi.Model
 {
-    public class User
+    public class User:RootEntity
     {
         public string NTID { get; set; }
 

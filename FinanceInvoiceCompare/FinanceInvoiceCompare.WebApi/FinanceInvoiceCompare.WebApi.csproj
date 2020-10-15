@@ -28,6 +28,7 @@
     <ProjectReference Include="..\FinanceInvoiceCompare.Common\FinanceInvoiceCompare.WebApi.Common.csproj" />
     <ProjectReference Include="..\FinanceInvoiceCompare.IService\FinanceInvoiceCompare.WebApi.IService.csproj" />
     <ProjectReference Include="..\FinanceInvoiceCompare.Middlewares\FinanceInvoiceCompare.WebApi.Middlewares.csproj" />
+    <ProjectReference Include="..\FinanceInvoiceCompare.Repository\FinanceInvoiceCompare.WebApi.Repository.csproj" />
     <ProjectReference Include="..\FinanceInvoiceCompare.Service\FinanceInvoiceCompare.WebApi.Service.csproj" />
   </ItemGroup>
 

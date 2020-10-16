@@ -8,8 +8,8 @@
 
         public string Email { get; set; }
 
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public int IsDelete { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

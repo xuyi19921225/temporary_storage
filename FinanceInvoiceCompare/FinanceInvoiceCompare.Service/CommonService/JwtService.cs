@@ -68,5 +68,33 @@ namespace FinanceInvoiceCompare.WebApi.Service
         }
 
 
+        /// <summary>
+        /// 解析
+        /// </summary>
+        /// <param name="jwtStr"></param>
+        /// <returns></returns>
+        public static TokenModelJwt SerializeJwt(string jwtStr)
+        {
+            var jwtHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken = jwtHandler.ReadJwtToken(jwtStr);
+            var tm = new TokenModelJwt
+            {
+                NTID = JwtRegisteredClaimNames.NameId
+            };
+            return tm;
+        }
+    }
+
+
+    /// <summary>
+    /// 令牌
+    /// </summary>
+    public class TokenModelJwt
+    {
+        /// <summary>
+        /// NTID
+        /// </summary>
+        public string NTID { get; set; }
+
     }
 }

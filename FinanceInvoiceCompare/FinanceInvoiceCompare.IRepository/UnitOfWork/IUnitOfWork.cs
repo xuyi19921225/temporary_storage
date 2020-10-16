@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace FinanceInvoiceCompare.WebApi.IRepository.UnitOfWork
+namespace FinanceInvoiceCompare.WebApi.IRepository
 {
     public interface IUnitOfWork
     {

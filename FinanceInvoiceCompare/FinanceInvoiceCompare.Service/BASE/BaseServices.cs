@@ -1,9 +1,7 @@
 ﻿using FinanceInvoiceCompare.WebApi.IRepository.Base;
 using FinanceInvoiceCompare.WebApi.IService.BASE;
-using SqlSugar;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 

@@ -1,8 +1,8 @@
-﻿using FinanceInvoiceCompare.WebApi.IRepository.UnitOfWork;
+﻿using FinanceInvoiceCompare.WebApi.IRepository;
 using SqlSugar;
 using System;
 
-namespace FinanceInvoiceCompare.WebApi.Repository.UnitWork
+namespace FinanceInvoiceCompare.WebApi.Repository
 {
     public class UnitOfWork:IUnitOfWork
     {

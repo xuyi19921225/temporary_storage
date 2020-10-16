@@ -8,6 +8,14 @@ export function getUserRoleMenuInfo(params) {
   })
 }
 
+export function getUserInfoByToken(params) {
+  return request({
+    url: '/User',
+    method: 'get',
+    params
+  })
+}
+
 export function getUserList(params) {
   return request({
     url: '/User',

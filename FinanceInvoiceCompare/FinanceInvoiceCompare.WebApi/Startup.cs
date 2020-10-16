@@ -19,6 +19,7 @@ using System;
 using Swashbuckle.AspNetCore.Filters;
 using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.Repository;
+using System.Collections.Generic;
 
 namespace FinanceInvoiceCompare.WebApi
 {
@@ -60,15 +61,16 @@ namespace FinanceInvoiceCompare.WebApi
 
             services.Configure<ApiBehaviorOptions>(options =>
              options.SuppressModelStateInvalidFilter = true);
-            BaseDBConfig dbConfig = Configuration.GetSection("DBS").Get<BaseDBConfig>();
+
+            List<BaseDBConfig> dbConfig = Configuration.GetSection("DBS").Get<List<BaseDBConfig>>();
 
             //注册服务，使用Scope保证每个会话的实力不同
             services.AddScoped<SqlSugar.ISqlSugarClient>(o =>
             {
                 return new SqlSugar.SqlSugarClient(new SqlSugar.ConnectionConfig()
                 {
-                    ConnectionString = dbConfig.Connection,//必填, 数据库连接字符串
-                    DbType = (SqlSugar.DbType)dbConfig.DbType,//必填, 数据库类型
+                    ConnectionString = dbConfig[0].Connection,//必填, 数据库连接字符串
+                    DbType = (SqlSugar.DbType)dbConfig[0].DbType,//必填, 数据库类型
                     IsAutoCloseConnection = true,//默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
                     InitKeyType = SqlSugar.InitKeyType.SystemTable//默认SystemTable, 字段信息读取, 如：该属性是不是主键，标识列等等信息
                 });
@@ -85,6 +87,8 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IJwtSerivce, JwtService>();
             services.AddScoped<ILDAPService, LDAPService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 
             #region 注册JWT验证的服务及参数

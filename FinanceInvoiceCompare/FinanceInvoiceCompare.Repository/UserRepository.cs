@@ -1,5 +1,4 @@
 ﻿using FinanceInvoiceCompare.WebApi.IRepository;
-using FinanceInvoiceCompare.WebApi.IRepository.UnitOfWork;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Repository.Base;
 

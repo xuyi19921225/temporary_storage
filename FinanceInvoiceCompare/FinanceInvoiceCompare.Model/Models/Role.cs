@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FinanceInvoiceCompare.WebApi.Model
+﻿namespace FinanceInvoiceCompare.WebApi.Model
 {
-    public class Role
+    public class Role:RootEntity
     {
         public string RoleName { get; set; }
 
         public string RoleCode { get; set; }
 
-        public int IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public int IsDelete { get; set; }
+        public bool IsDelete { get; set; }
     }
 }

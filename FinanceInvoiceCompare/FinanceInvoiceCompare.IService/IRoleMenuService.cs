@@ -1,11 +1,12 @@
 ﻿using FinanceInvoiceCompare.WebApi.IService.BASE;
 using FinanceInvoiceCompare.WebApi.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.IService
 {
-    public interface IUserService:IBaseServices<User>
+    public interface IRoleMenuService: IBaseServices<RoleMenuMapping>
     {
-        Task<sysUserInfo> GetSysUserInfo(string ntid);
+        Task<List<RoleMenuMapping>> GetRMMaps();
     }
 }

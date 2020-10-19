@@ -1,12 +1,12 @@
 ﻿using FinanceInvoiceCompare.WebApi.IRepository.Base;
 using FinanceInvoiceCompare.WebApi.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.IRepository
 {
-    public interface IUserRepository: IBaseRepository<User>
+    public interface ICompanyRepository: IBaseRepository<Company>
     {
-        Task<sysUserInfo> GetSysUserInfo(string ntid);
-        
+        Task<List<Company>> GetCompanyCode(int userID);
     }
 }

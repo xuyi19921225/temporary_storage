@@ -26,10 +26,29 @@
             角色逻辑
             </summary>
         </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController">
+            <summary>
+            角色和菜单关系
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController.GetMenus(System.Int32)">
+            <summary>
+            根据角色ID获取菜单信息
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserController">
             <summary>
             用户操作
             </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserController.GetUserInfoByToken(System.String)">
+            <summary>
+            根据Token获取用户信息
+            </summary>
+            <param name="token">token</param>
+            <returns></returns>
         </member>
     </members>
 </doc>

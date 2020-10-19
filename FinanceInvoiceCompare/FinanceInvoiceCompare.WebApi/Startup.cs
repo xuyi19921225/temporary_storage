@@ -87,7 +87,10 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IJwtSerivce, JwtService>();
             services.AddScoped<ILDAPService, LDAPService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleMenuService, RoleMenuService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 

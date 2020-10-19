@@ -7,5 +7,6 @@ namespace FinanceInvoiceCompare.WebApi.IService
     {
         Task<string> GenerateToken(LoginRequestModel model);
 
+        TokenModelJwt SerializeJwt(string token);
     }
 }

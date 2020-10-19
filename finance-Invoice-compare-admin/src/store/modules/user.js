@@ -1,8 +1,8 @@
 import { login } from '@/api/login'
-import { getUserRoleMenuInfo } from '@/api/user'
+import { getUserInfoByToken } from '@/api/user'
+import { getMenusByRoleID } from '@/api/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { decode } from '@/utils/jwt'
 
 const getDefaultState = () => {
   return {
@@ -10,9 +10,7 @@ const getDefaultState = () => {
     name: '',
     avatar: '',
     roles: [],
-    siteID: '',
-    divisionID: '',
-    department: '',
+    company: '',
     asyncRoutes: []
   }
 }
@@ -29,20 +27,17 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_SITEID: (state, siteID) => {
-    state.siteID = siteID
-  },
-  SET_DIVISIONID: (state, divisionID) => {
-    state.divisionID = divisionID
-  },
-  SET_DEPARTMENT: (state, department) => {
-    state.department = department
-  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_ROLEID: (state, roleId) => {
+    state.roleId = roleId
+  },
+  SET_COMPANY: (state, company) => {
+    state.company = company
   },
   SET_ASYNCROUTES: (state, routes) => {
     state.asyncRoutes = routes
@@ -75,19 +70,36 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      var token = decode(state.token)
-      getUserRoleMenuInfo({ ntid: token.nameid, siteID: token.SiteID }).then(res => {
+      getUserInfoByToken({ token: state.token }).then(res => {
         try {
           if (res.success === true) {
             const data = res.response
-            commit('SET_SITEID', data.siteID)
-            commit('SET_DIVISIONID', data.divisionID)
-            commit('SET_DEPARTMENT', data.department)
             commit('SET_NAME', data.userName)
             commit('SET_ROLES', data.roleName)
-            commit('SET_ASYNCROUTES', data.menuList)
+            commit('SET_ROLEID', data.roleId)
+            commit('SET_COMPANY', data.companyCode)
             commit('SET_AVATAR', '')
-            resolve(data.menuList)
+            resolve()
+          } else {
+            reject(res.message)
+          }
+        } catch (error) {
+          reject(error)
+        }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  getMenu({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getMenusByRoleID({ roleId: state.roleId }).then(res => {
+        try {
+          if (res.success === true) {
+            const data = res.response
+            commit('SET_ASYNCROUTES', data.menu)
+            resolve(data.menu)
           } else {
             reject(res.message)
           }

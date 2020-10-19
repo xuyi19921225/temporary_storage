@@ -29,7 +29,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <summary>
         /// 根据角色ID获取菜单信息
         /// </summary>
-        /// <param name="id">id</param>
+        /// <param name="roleId">id</param>
         /// <returns></returns>
         [HttpGet]
         [Authorize]
@@ -39,11 +39,10 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
             if (roleId > 0) 
             {
-                var allroleMenuMapping = await roleMenuService.GetRMMaps();
-                var roleMenuMapping = allroleMenuMapping.Where(x => x.RoleID == roleId).ToList();
-                if (roleMenuMapping != null)
+                var menus = await roleMenuService.GetMenusByRoleID(roleId);
+                if (menus != null)
                 {
-                    data.Response = roleMenuMapping[0].Menus;
+                    data.Response = menus;
                     data.Success = true;
                     data.Message = "获取成功";
                 }

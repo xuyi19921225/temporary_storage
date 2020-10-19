@@ -9,6 +9,6 @@ namespace FinanceInvoiceCompare.WebApi.IRepository
 {
     public interface IRoleMenuRepository:IBaseRepository<RoleMenuMapping>
     {
-        Task<List<RoleMenuMapping>> GetRMMaps();
+        Task<List<Menu>> GetMenusByRoleID(int roleID)
     }
 }

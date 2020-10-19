@@ -21,9 +21,9 @@ namespace FinanceInvoiceCompare.WebApi.Service
         /// 查询出角色-菜单全部Map属性数据
         /// </summary>
         /// <returns></returns>
-        public async Task<List<RoleMenuMapping>> GetRMMaps()
+        public async Task<List<Menu>> GetMenusByRoleID(int roleID)
         {
-            return await dal.GetRMMaps();
+            return await dal.GetMenusByRoleID(roleID);
         }
     }
 }

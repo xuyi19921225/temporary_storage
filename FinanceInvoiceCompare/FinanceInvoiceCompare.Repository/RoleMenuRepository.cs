@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Repository.Base;
+using SqlSugar;
 
 namespace FinanceInvoiceCompare.WebApi.Repository
 {
@@ -13,11 +14,22 @@ namespace FinanceInvoiceCompare.WebApi.Repository
 
         }
 
-        public async Task<List<RoleMenuMapping>> GetRMMaps()
+
+        public async Task<List<Menu>> GetMenusByRoleID(int roleID)
         {
-            return await Db.Queryable<RoleMenuMapping>()
-               .Mapper(rmp => rmp.Menus, rmp => rmp.MenuID)
-               .ToListAsync();
+            //return await Db.Queryable<Menu>()
+            //   .Mapper(rmp => rmp.Menus, rmp => rmp.MenuID)
+            //   .ToListAsync();
+
+            return await Db.Queryable<Menu, RoleMenuMapping, Role>((a1, b2, c3) => new object[]
+          {
+                        JoinType.Left,a1.Id==b2.MenuID,
+                        JoinType.Left,b2.RoleID==c3.Id
+
+          })
+          .Where((a1, b2, c3) =>c3.Id==roleID&& a1.IsDelete == false && c3.IsDelete == false)
+          .Select<Menu>()
+          .ToListAsync();
         }
     }   
 }

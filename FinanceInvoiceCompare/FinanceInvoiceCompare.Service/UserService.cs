@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
@@ -27,7 +29,19 @@ namespace FinanceInvoiceCompare.WebApi.Service
         {
             var sysUserInfo = await _dal.GetSysUserInfo(ntid);
 
-            sysUserInfo.Code = await companyRepository.GetCompanyCode(sysUserInfo.UserID);
+            List<Company> companyList=await companyRepository.GetCompanyCode(sysUserInfo.UserID);
+
+            if (companyList.Count > 0) 
+            {
+                string companyCode = string.Empty;
+                foreach (var item in companyList)
+                {
+                    companyCode += item.Code + ",";
+                }
+
+                sysUserInfo.CompanyCode = companyCode.Substring(0, companyCode.Length - 1);
+            }
+
 
             return sysUserInfo;
         }

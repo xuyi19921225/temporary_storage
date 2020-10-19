@@ -13,9 +13,8 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string RoleName { get; set; }
 
-        public string CompanyCode => string.Join(',', Code);
+        public string CompanyCode { get; set; }
 
-        public List<Company> Code { get; set; }
     }
 
 }

@@ -33,17 +33,17 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<MessageModel<List<RoleMenuMapping>>> GetMenus(int id)
+        public async Task<MessageModel<List<Menu>>> GetMenus(int roleId)
         {
-            var data = new MessageModel<List<RoleMenuMapping>>();
+            var data = new MessageModel<List<Menu>>();
 
-            if (id > 0) 
+            if (roleId > 0) 
             {
                 var allroleMenuMapping = await roleMenuService.GetRMMaps();
-                var roleMenuMapping = allroleMenuMapping.Where(x => x.MenuID == id).ToList();
+                var roleMenuMapping = allroleMenuMapping.Where(x => x.RoleID == roleId).ToList();
                 if (roleMenuMapping != null)
                 {
-                    data.Response = roleMenuMapping;
+                    data.Response = roleMenuMapping[0].Menus;
                     data.Success = true;
                     data.Message = "获取成功";
                 }

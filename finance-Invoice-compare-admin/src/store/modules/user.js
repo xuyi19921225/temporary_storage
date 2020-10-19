@@ -33,8 +33,8 @@ const mutations = {
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
-  SET_ROLEID: (state, roleId) => {
-    state.roleId = roleId
+  SET_ROLEID: (state, roleID) => {
+    state.roleID= roleID
   },
   SET_COMPANY: (state, company) => {
     state.company = company
@@ -76,7 +76,7 @@ const actions = {
             const data = res.response
             commit('SET_NAME', data.userName)
             commit('SET_ROLES', data.roleName)
-            commit('SET_ROLEID', data.roleId)
+            commit('SET_ROLEID', data.roleID)
             commit('SET_COMPANY', data.companyCode)
             commit('SET_AVATAR', '')
             resolve()
@@ -94,7 +94,7 @@ const actions = {
 
   getMenu({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getMenusByRoleID({ roleId: state.roleId }).then(res => {
+      getMenusByRoleID({ roleId: state.roleID }).then(res => {
         try {
           if (res.success === true) {
             const data = res.response

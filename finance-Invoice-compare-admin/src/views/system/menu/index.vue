@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.roleCode" placeholder="RoleCode" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.menuName" placeholder="MenuName" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
@@ -23,17 +23,31 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="RoleCode" align="center">
+      <el-table-column label="ParentID" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.roleCode }}</span>
+          <span>{{ row.parentID }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="RoleName" align="center">
+      <el-table-column label="MenuName" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.roleName }}</span>
+          <span>{{ row.menuName }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="Icon" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.icon }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Component" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.component }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Path" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.path }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -52,12 +66,12 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/role'
+import { getMenus } from '@/api/menu'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'RoleListTable',
+  name: 'MenuListTable',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -69,7 +83,7 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        roleCode: ''
+        menuName: ''
       }
     }
   },
@@ -79,7 +93,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getRoleList(this.listQuery).then(res => {
+      getMenus(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false

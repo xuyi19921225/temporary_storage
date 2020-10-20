@@ -4,7 +4,8 @@ import { constantRoutes } from '@/router'
 const map = {
   layout: () => import('@/layout'),
   user: () => import('@/views/system/user/index'),
-  role: () => import('@/views/system/role/index')
+  role: () => import('@/views/system/role/index'),
+  menu: () => import('@/views/system/menu/index')
 }
 
 const state = {

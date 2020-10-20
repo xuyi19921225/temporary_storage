@@ -90,9 +90,11 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IRoleMenuRepository, RoleMenuRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleMenuService, RoleMenuService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IMenuService, MenuService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 

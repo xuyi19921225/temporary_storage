@@ -1,15 +1,10 @@
 import { constantRoutes } from '@/router'
-// import Layout from '@/layout'
+
 // 添加路由映射
 const map = {
   layout: () => import('@/layout'),
-  user: () => import('@/views/permissions/user/index'),
-  userCreate: () => import('@/views/permissions/user/create'),
-  userEdit: () => import('@/views/permissions/user/edit'),
-  projectMaintenance: () => import('@/views/maintenance/project-maintenance/index'),
-  projectMaintenanceCreate: () => import('@/views/maintenance/project-maintenance/create'),
-  projectMaintenanceEdit: () => import('@/views/maintenance/project-maintenance/edit'),
-  mainMaintenance: () => import('@/views/maintenance/main-maintenance/index')
+  user: () => import('@/views/system/user/index'),
+  role: () => import('@/views/system/role/index')
 }
 
 const state = {
@@ -18,9 +13,9 @@ const state = {
 }
 
 const mutations = {
-  SET_ROUTES: (state, routes) => {
-    state.asyncRoutes = routes
-    state.routes = constantRoutes.concat(routes)
+  SET_ROUTES: (state, asyncRoutes) => {
+    state.asyncRoutes = asyncRoutes
+    state.routes = constantRoutes.concat(asyncRoutes)
   }
 }
 
@@ -31,14 +26,15 @@ const actions = {
         var asyncRoutes = []
         if (menuList && menuList.length > 0) {
           var parentMenuList = menuList.filter((value) => value.parentID === -1)
-
+          // 修改数据结构
           parentMenuList.forEach(parentElement => {
             var parentTemp = {
               path: parentElement.path,
-              name: parentElement.name,
+              name: parentElement.menuName,
               component: map[parentElement.component],
+              hidden: parentElement.hidden,
               redirect: parentElement.redirect,
-              alwaysShow: true,
+              alwaysShow: parentElement.alwaysShow,
               meta: {
                 title: parentElement.title,
                 icon: parentElement.icon
@@ -51,9 +47,10 @@ const actions = {
             childrenMenuList.forEach(childrenElement => {
               temp = {
                 path: childrenElement.path,
-                name: childrenElement.name,
+                name: childrenElement.menuName,
                 component: map[childrenElement.component],
                 hidden: childrenElement.hidden,
+                alwaysShow: childrenElement.alwaysShow,
                 meta: {
                   title: childrenElement.title,
                   icon: childrenElement.icon

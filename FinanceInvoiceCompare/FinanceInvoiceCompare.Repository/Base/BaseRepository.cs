@@ -1,5 +1,6 @@
 ﻿using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.IRepository.Base;
+using FinanceInvoiceCompare.WebApi.Model;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -387,26 +388,26 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
 
 
-        ///// <summary>
-        ///// 分页查询[使用版本，其他分页未测试]
-        ///// </summary>
-        ///// <param name="whereExpression">条件表达式</param>
-        ///// <param name="intPageIndex">页码（下标0）</param>
-        ///// <param name="intPageSize">页大小</param>
-        ///// <param name="strOrderByFileds">排序字段，如name asc,age desc</param>
-        ///// <returns></returns>
-        //public async Task<PageModel<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 1, int intPageSize = 20, string strOrderByFileds = null)
-        //{
+        /// <summary>
+        /// 分页查询[使用版本，其他分页未测试]
+        /// </summary>
+        /// <param name="whereExpression">条件表达式</param>
+        /// <param name="intPageIndex">页码（下标0）</param>
+        /// <param name="intPageSize">页大小</param>
+        /// <param name="strOrderByFileds">排序字段，如name asc,age desc</param>
+        /// <returns></returns>
+        public async Task<PageModel<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression, int intPageIndex = 1, int intPageSize = 20, string strOrderByFileds = null)
+        {
 
-        //    RefAsync<int> totalCount = 0;
-        //    var list = await _db.Queryable<TEntity>()
-        //     .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
-        //     .WhereIF(whereExpression != null, whereExpression)
-        //     .ToPageListAsync(intPageIndex, intPageSize, totalCount);
+            RefAsync<int> totalCount = 0;
+            var list = await _db.Queryable<TEntity>()
+             .OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds)
+             .WhereIF(whereExpression != null, whereExpression)
+             .ToPageListAsync(intPageIndex, intPageSize, totalCount);
 
-        //    int pageCount = (Math.Ceiling(totalCount.ObjToDecimal() / intPageSize.ObjToDecimal())).ObjToInt();
-        //    return new PageModel<TEntity>() { dataCount = totalCount, pageCount = pageCount, page = intPageIndex, PageSize = intPageSize, data = list };
-        //}
+            int pageCount = (Math.Ceiling(totalCount.ObjToDecimal() / intPageSize.ObjToDecimal())).ObjToInt();
+            return new PageModel<TEntity>() { TotalCount = totalCount, PageSize = pageCount, PageIndex = intPageIndex, List = list };
+        }
 
 
         /// <summary> 

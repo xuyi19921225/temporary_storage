@@ -16,6 +16,8 @@
 
         public string Title { get; set; }
 
+        public bool AlwaysShow { get; set; }
+
         public bool Hidden { get; set; }
 
         public bool HasChildren { get; set; }

@@ -35,7 +35,6 @@ export default {
   },
   created() {
     this.listQuery.siteID = this.$store.getters.siteID
-    this.getDivision()
   },
   methods: {
 

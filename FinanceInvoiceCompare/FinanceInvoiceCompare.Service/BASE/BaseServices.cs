@@ -1,5 +1,6 @@
 ﻿using FinanceInvoiceCompare.WebApi.IRepository.Base;
 using FinanceInvoiceCompare.WebApi.IService.BASE;
+using FinanceInvoiceCompare.WebApi.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -277,12 +278,12 @@ namespace FinanceInvoiceCompare.WebApi.Service.BASE
             strOrderByFileds);
         }
 
-        //public async Task<PageModel<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression,
-        //int intPageIndex = 1, int intPageSize = 20, string strOrderByFileds = null)
-        //{
-        //    return await BaseDal.QueryPage(whereExpression,
-        // intPageIndex, intPageSize, strOrderByFileds);
-        //}
+        public async Task<PageModel<TEntity>> QueryPage(Expression<Func<TEntity, bool>> whereExpression,
+        int intPageIndex = 1, int intPageSize = 20, string strOrderByFileds = null)
+        {
+            return await BaseDal.QueryPage(whereExpression,
+         intPageIndex, intPageSize, strOrderByFileds);
+        }
 
         public async Task<List<TResult>> QueryMuch<T, T2, T3, TResult>(Expression<Func<T, T2, T3, object[]>> joinExpression, Expression<Func<T, T2, T3, TResult>> selectExpression, Expression<Func<T, T2, T3, bool>> whereLambda = null) where T : class, new()
         {

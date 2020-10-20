@@ -34,7 +34,7 @@ const mutations = {
     state.roles = roles
   },
   SET_ROLEID: (state, roleID) => {
-    state.roleID= roleID
+    state.roleID = roleID
   },
   SET_COMPANY: (state, company) => {
     state.company = company
@@ -98,8 +98,8 @@ const actions = {
         try {
           if (res.success === true) {
             const data = res.response
-            commit('SET_ASYNCROUTES', data.menu)
-            resolve(data.menu)
+            commit('SET_ASYNCROUTES', data)
+            resolve(data)
           } else {
             reject(res.message)
           }

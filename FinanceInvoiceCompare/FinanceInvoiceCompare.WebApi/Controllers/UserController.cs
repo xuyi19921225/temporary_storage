@@ -17,7 +17,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         private readonly IUserService userService;
         private readonly IJwtSerivce jwtSerivce;
 
-        public UserController(IUserService userService,IJwtSerivce jwtSerivce)
+        public UserController(IUserService userService, IJwtSerivce jwtSerivce)
         {
             this.userService = userService;
             this.jwtSerivce = jwtSerivce;
@@ -30,6 +30,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
+        [Route("GetUserInfoByToken")]
         public async Task<MessageModel<sysUserInfo>> GetUserInfoByToken(string token)
         {
             var data = new MessageModel<sysUserInfo>();
@@ -50,5 +51,23 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             }
             return data;
         }
+
+        /// <summary>
+        /// 获取用户信息
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        public async Task<MessageModel<PageModel<User>>> Get([FromQuery]UserRequestModel model)
+        {
+            return new MessageModel<PageModel<User>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await userService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
+            };
+        }
+
     }
 }

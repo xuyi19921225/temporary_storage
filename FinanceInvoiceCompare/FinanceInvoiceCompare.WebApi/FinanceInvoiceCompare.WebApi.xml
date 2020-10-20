@@ -26,6 +26,13 @@
             角色逻辑
             </summary>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.Get(FinanceInvoiceCompare.WebApi.Model.RoleRequestModel)">
+            <summary>
+            获取角色信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController">
             <summary>
             角色和菜单关系
@@ -35,7 +42,7 @@
             <summary>
             根据角色ID获取菜单信息
             </summary>
-            <param name="id">id</param>
+            <param name="roleId">id</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserController">
@@ -48,6 +55,13 @@
             根据Token获取用户信息
             </summary>
             <param name="token">token</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserController.Get(FinanceInvoiceCompare.WebApi.Model.UserRequestModel)">
+            <summary>
+            获取用户信息
+            </summary>
+            <param name="model">model</param>
             <returns></returns>
         </member>
     </members>

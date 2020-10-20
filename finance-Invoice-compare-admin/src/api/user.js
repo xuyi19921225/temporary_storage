@@ -10,7 +10,7 @@ export function getUserRoleMenuInfo(params) {
 
 export function getUserInfoByToken(params) {
   return request({
-    url: '/User',
+    url: '/User/GetUserInfoByToken',
     method: 'get',
     params
   })

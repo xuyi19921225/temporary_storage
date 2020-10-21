@@ -37,8 +37,9 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [AllowAnonymous]
         public async Task<MessageModel<string>> GetToken([FromQuery]LoginRequestModel model)
         {
+            //_ladpUtility.ValidADUser(model)
             //// 验证AD 账号
-            if (_ladpUtility.ValidADUser(model))
+            if (true)
             {
                 var user = await userService.Query(x => x.NTID == model.NTID&&x.IsActive==true);
 

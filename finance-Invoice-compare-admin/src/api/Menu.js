@@ -7,3 +7,11 @@ export function getMenusByRoleID(params) {
     params
   })
 }
+
+export function getMenus(params) {
+  return request({
+    url: '/menu',
+    method: 'get',
+    params
+  })
+}

@@ -61,6 +61,30 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
 
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑用户':'新增用户'">
+      <el-form :model="dialogData" label-width="80px" label-position="left">
+        <el-form-item label="NTID">
+          <el-input v-model="dialogData.ntid" />
+        </el-form-item>
+        <el-form-item label="用户名">
+          <el-input v-model="dialogData.userName" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="dialogData.email" />
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-switch
+            v-model="dialogData.isActive"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" @click="dialogVisible=false">Cancel</el-button>
+        <el-button type="primary" @click="confirmRole">Confirm</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,6 +107,15 @@ export default {
         pageindex: 1,
         pagesize: 20,
         NTID: ''
+      },
+      dialogVisible: false,
+      dialogType: '',
+      dialogData: {
+        id: '',
+        ntid: '',
+        username: '',
+        email: '',
+        isActive: true
       }
     }
   },
@@ -124,8 +157,9 @@ export default {
       this.getList()
     },
     handleCreate() {
-      this.$router.push({
-        path: '/user/create'
+       this.dialogType = 'Add'
+      this.dialogVisible = true
+      this.$nextTick(() => {
       })
     },
     handleUpdate(row) {

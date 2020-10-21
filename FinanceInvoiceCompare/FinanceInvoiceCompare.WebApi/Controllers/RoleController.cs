@@ -33,7 +33,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Authorize]
         public async Task<MessageModel<PageModel<Role>>> Get([FromQuery]RoleRequestModel model)
         {
-            Expression<Func<Role, bool>> whereExpression = a => a.IsDelete == false && (a.RoleCode != null && a.RoleCode.Contains(model.RoleCode));
+            Expression<Func<Role, bool>> whereExpression = a => a.IsDelete == false;
             return new MessageModel<PageModel<Role>>()
             {
                 Message = "获取信息成功",

@@ -48,10 +48,13 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
+            分配角色
+          </el-button>
+          <el-button type="primary" size="mini" @click="handleAuthorize(row)">
+            授权公司
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
@@ -73,6 +76,21 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dialogData.email" />
         </el-form-item>
+        <el-form-item label="角色" prop="rid">
+          <el-select
+            v-model="dialogData.rid"
+            class="filter-item"
+            placeholder="请选择角色"
+            style="width:100%"
+          >
+            <el-option
+              v-for="item in roleList"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="是否启用" prop="isActive">
           <el-switch
             v-model="dialogData.isActive"
@@ -86,11 +104,33 @@
         <el-button type="primary" @click="confirm">确认</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialog2Visible" title="授权公司">
+      <el-form ref="companyForm" :model="dialog2Data" label-width="80px" label-position="right">
+        <el-form-item label="公司列表">
+          <el-tree
+            ref="tree"
+            :data="companyList"
+            show-checkbox
+            node-key="id"
+            :default-expanded-keys="[2, 3]"
+            :default-checked-keys="[5]"
+            :props="defaultProps"
+          />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="confirmCompany">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getUserList, addUser, saveUser, deleteUser } from '@/api/user'
+import { getAllRoleList } from '@/api/role'
+import { getAllCompanyList } from '@/api/company'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -109,13 +149,16 @@ export default {
         pagesize: 20,
         NTID: ''
       },
+      roleList: [],
       dialogVisible: false,
+
       dialogType: '',
       dialogData: {
         ntid: '',
         userName: '',
         email: '',
-        isActive: true
+        isActive: true,
+        rid: ''
       },
       rules: {
         ntid: [{ required: true, message: '工号是必填项', trigger: 'blur' }],
@@ -128,6 +171,17 @@ export default {
             trigger: ['blur']
           }
         ]
+      },
+      companyList: [],
+      dialog2Visible: false,
+      dialog2Data: {
+        id: '',
+        selectCompany: []
+      },
+      defaultProps: {
+        children: 'children',
+        label: 'companyName',
+        id: 'companyCode'
       }
     }
   },
@@ -144,6 +198,16 @@ export default {
       }).catch(
         this.listLoading = false
       )
+    },
+    getAllRoleList() {
+      getAllRoleList().then(res => {
+        this.roleList = res.response
+      })
+    },
+    getAllCompanyList() {
+      getAllCompanyList().then(res => {
+        this.companyList = res.response
+      })
     },
     deleteUser(id) {
       deleteUser({ id: id }).then(res => {
@@ -208,6 +272,9 @@ export default {
         }
       })
     },
+    confirmCompany() {
+      console.log(this.$refs.tree.getCheckedNodes())
+    },
     handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
@@ -218,6 +285,7 @@ export default {
       Object.assign(this.dialogData, this.defaultValue())
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
+        this.getAllRoleList()
       })
     },
     handleUpdate(row) {
@@ -226,14 +294,24 @@ export default {
       Object.assign(this.dialogData, this.defaultValue())
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
+        this.getAllRoleList()
         this.dialogData = {
           ntid: row.ntid,
           userName: row.ntid,
           email: row.email,
           isActive: row.isActive,
-          id: row.id
+          id: row.id,
+          rid: row.roleID
         }
       })
+    },
+    handleAuthorize(row) {
+      this.dialog2Visible = true
+      this.dialog2Data.id = row.id
+      this.$nextTick(() => {
+        this.getAllCompanyList()
+      })
+      // this.companyList.push({ id: 1, lable: 'tets' })
     },
     handleDelete(row, index) {
       this.deleteUser(row.id)
@@ -243,7 +321,8 @@ export default {
         ntid: '',
         userName: '',
         email: '',
-        isActive: true
+        isActive: true,
+        rid: ''
       }
     }
   }

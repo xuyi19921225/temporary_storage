@@ -8,6 +8,14 @@ export function getRoleList(params) {
   })
 }
 
+export function getAllRoleList(params) {
+  return request({
+    url: '/role/getAllRoleList',
+    method: 'get',
+    params
+  })
+}
+
 export function addRole(data) {
   return request({
     url: '/role',

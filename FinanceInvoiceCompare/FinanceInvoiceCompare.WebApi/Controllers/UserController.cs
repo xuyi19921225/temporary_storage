@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.Common;
+using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FinanceInvoiceCompare.WebApi.Controllers
 {
@@ -18,11 +21,17 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
     {
         private readonly IUserService userService;
         private readonly IJwtSerivce jwtSerivce;
+        private readonly IUserRoleService userRoleService;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ILogger<UserController> logger;
 
-        public UserController(IUserService userService, IJwtSerivce jwtSerivce)
+        public UserController(IUserService userService, IJwtSerivce jwtSerivce, IUserRoleService userRoleService, IUnitOfWork unitOfWork, ILogger<UserController> logger)
         {
             this.userService = userService;
             this.jwtSerivce = jwtSerivce;
+            this.userRoleService = userRoleService;
+            this.unitOfWork = unitOfWork;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -61,13 +70,13 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<MessageModel<PageModel<User>>> Get([FromQuery]UserRequestModel model)
+        public async Task<MessageModel<PageModel<UserRoleViewModel>>> Get([FromQuery] UserRequestModel model)
         {
-            return new MessageModel<PageModel<User>>()
+            return new MessageModel<PageModel<UserRoleViewModel>>()
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await userService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
+                Response = await userRoleService.UserRoleMaps(model)
             };
         }
 
@@ -79,7 +88,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<MessageModel<string>> Post([FromBody]User model)
+        public async Task<MessageModel<string>> Post([FromBody] User model)
         {
             var data = new MessageModel<string>();
 
@@ -93,7 +102,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             }
             else
             {
-                var flag = data.Success = await userService.Add(model, null, new List<string>() { "UpdatedBy","UpdatedAt" }) > 0;
+                var flag = data.Success = await userService.Add(model) > 0;
                 if (flag)
                 {
                     data.Message = "添加成功";
@@ -114,21 +123,43 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize]
-        public async Task<MessageModel<string>> Put([FromBody]User model)
+        public async Task<MessageModel<string>> Put([FromBody] User model)
         {
             var data = new MessageModel<string>();
-
-
-
-            var flag = data.Success = await userService.Update(model,null,new List<string>() { "CreateBy","CreateAt" });
-            if (flag)
+            try
             {
-                data.Message = "更新成功";
+                unitOfWork.BeginTran();
+                if (model.RID > 0)
+                {
+                    // 无论 Update Or Add , 先删除当前用户的全部 U_R 关系
+                    var usreroles = (await userRoleService.Query(d => d.UserID == model.Id)).Select(d => d.ID.ToString()).ToArray();
+                    ////删除关联关系
+                    var isAllDeleted = await userRoleService.DeleteByIds(usreroles);
+
+                    ////添加关系
+                    var addUserRole = await userRoleService.Add(new UserRoleMapping() { RoleID = model.RID, UserID = model.Id, CreateBy = model.UpdatedBy });
+                }
+          
+                var flag = data.Success = await userService.Update(model);
+
+                unitOfWork.CommitTran();
+                if (flag)
+                {
+                    data.Message = "更新成功";
+                }
+                else
+                {
+                    data.Message = "更新失败";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                data.Message = "更新失败";
+                unitOfWork.RollbackTran();
+                logger.LogError(ex, ex.Message);
             }
+
+
+
 
             return data;
         }
@@ -140,7 +171,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Authorize]
-        public async Task<MessageModel<string>> Delete([FromQuery]int id)
+        public async Task<MessageModel<string>> Delete([FromQuery] int id)
         {
             var data = new MessageModel<string>();
             if (id > 0)

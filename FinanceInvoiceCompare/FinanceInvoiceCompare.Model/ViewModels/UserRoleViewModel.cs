@@ -1,13 +1,15 @@
 ﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace FinanceInvoiceCompare.WebApi.Model
 {
-    public class User:RootEntity
+    public class UserRoleViewModel:RootEntity
     {
         public string NTID { get; set; }
 
-        public string UserName  { get; set; }
+        public string UserName { get; set; }
 
         public string Email { get; set; }
 
@@ -15,8 +17,10 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool IsDelete { get; set; } = false;
 
-        [SugarColumn(IsIgnore = true)]
-        public int RID { get; set; }
-       
+        public int RoleID { get; set; }
+
+        public string RoleName { get; set; }
+
+        public string RoleCode { get; set; }
     }
 }

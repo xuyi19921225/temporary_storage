@@ -62,15 +62,14 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑角色':'新增角色'">
-      <el-form ref="dataForm" :model="dialogData" label-width="100px" label-position="left" :rules="rules">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑菜单':'新增菜单'">
+      <el-form ref="dataForm" :model="dialogData" label-width="100px" label-position="right" :rules="rules">
         <el-form-item label="父级菜单">
           <el-select
             v-model="dialogData.parentID"
             class="filter-item"
-            placeholder="请选择"
+            placeholder="请选择菜单"
             style="width:100%"
-            clearable
           >
             <el-option
               v-for="item in menuList"
@@ -145,7 +144,7 @@ export default {
       dialogVisible: false,
       dialogType: '',
       dialogData: {
-        parentID: -1,
+        parentID: '',
         menuName: '',
         icon: '',
         path: '',
@@ -156,8 +155,9 @@ export default {
         hidden: false
       },
       rules: {
-        roleCode: [{ required: true, message: '角色Code是必填项', trigger: 'blur' }],
-        roleName: [{ required: true, message: '角色名是必填项', trigger: 'blur' }]
+        menuName: [{ required: true, message: '菜单名是必填项', trigger: 'blur' }],
+        path: [{ required: true, message: '路径是必填项', trigger: 'blur' }],
+        component: [{ required: true, message: '组件是必填项', trigger: 'blur' }]
       }
     }
   },
@@ -201,6 +201,7 @@ export default {
     },
     addMenu() {
       this.dialogData.createBy = this.$store.getters.userID
+      this.dialogData.parentID = this.dialogData.parentID === '' ? -1 : this.dialogData.parentID
       addMenu(this.dialogData).then(res => {
         if (res.success === true) {
           this.$message({
@@ -216,6 +217,7 @@ export default {
     },
     saveMenu() {
       this.dialogData.updatedBy = this.$store.getters.userID
+      this.dialogData.parentID = this.dialogData.parentID === '' ? -1 : this.dialogData.parentID
       saveMenu(this.dialogData).then(res => {
         if (res.success === true) {
           this.$message({
@@ -277,11 +279,11 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.deleteUser(row.id)
+      this.deleteMenu(row.id)
     },
     defaultValue() {
       this.dialogData = {
-        parentID: -1,
+        parentID: '',
         menuName: '',
         icon: '',
         path: '',

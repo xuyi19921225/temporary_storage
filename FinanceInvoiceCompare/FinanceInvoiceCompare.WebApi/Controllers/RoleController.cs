@@ -44,6 +44,26 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         }
 
 
+
+        /// <summary>
+        /// 获取所有角色信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetAllRoleList")]
+        public async Task<MessageModel<List<Role>>> GetAllRoleList()
+        {
+            return new MessageModel<List<Role>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await roleService.Query(x => x.IsDelete == false)
+            };
+        }
+
+
+
         /// <summary>
         /// 添加一个角色
         /// </summary>

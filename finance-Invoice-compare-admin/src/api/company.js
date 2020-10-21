@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getDepartmentList(params) {
+export function getAllCompanyList(params) {
   return request({
-    url: '/Department',
+    url: '/company/getAllCompanyList',
     method: 'get',
     params
   })

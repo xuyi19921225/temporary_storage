@@ -15,6 +15,8 @@ namespace FinanceInvoiceCompare.WebApi.IRepository.Base
 
         Task<int> Add(TEntity model);
 
+        Task<int> Add(TEntity entity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null);
+
         Task<int> Add(List<TEntity> listEntity);
 
         Task<bool> DeleteById(object id);

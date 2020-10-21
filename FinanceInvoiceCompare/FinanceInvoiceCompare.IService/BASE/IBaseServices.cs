@@ -16,6 +16,7 @@ namespace FinanceInvoiceCompare.WebApi.IService.BASE
         Task<List<TEntity>> QueryByIDs(object[] lstIds);
 
         Task<int> Add(TEntity model);
+        Task<int> Add(TEntity entity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null);
 
         Task<int> Add(List<TEntity> listEntity);
 

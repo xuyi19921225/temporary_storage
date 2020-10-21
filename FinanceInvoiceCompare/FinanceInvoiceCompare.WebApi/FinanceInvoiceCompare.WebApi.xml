@@ -21,6 +21,45 @@
             <param name="model">账号信息</param>
             <returns></returns>
         </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.MenuController">
+            <summary>
+            菜单操作
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.Get(FinanceInvoiceCompare.WebApi.Model.MenuRequestModel)">
+            <summary>
+            获取菜单信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.GetAllMenus">
+            <summary>
+            获取所有菜单信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.Post(FinanceInvoiceCompare.WebApi.Model.Menu)">
+            <summary>
+            添加一个菜单
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.Put(FinanceInvoiceCompare.WebApi.Model.Menu)">
+            <summary>
+            更新一个菜单
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.Delete(System.Int32)">
+            <summary>
+            删除一个菜单
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleController">
             <summary>
             角色逻辑
@@ -31,6 +70,27 @@
             获取角色信息
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.Post(FinanceInvoiceCompare.WebApi.Model.Role)">
+            <summary>
+            添加一个角色
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.Put(FinanceInvoiceCompare.WebApi.Model.Role)">
+            <summary>
+            更新一个角色
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.Delete(System.Int32)">
+            <summary>
+            删除一个角色
+            </summary>
+            <param name="id">id</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController">
@@ -62,6 +122,27 @@
             获取用户信息
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserController.Post(FinanceInvoiceCompare.WebApi.Model.User)">
+            <summary>
+            添加一个用户
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserController.Put(FinanceInvoiceCompare.WebApi.Model.User)">
+            <summary>
+            更新一个用户
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserController.Delete(System.Int32)">
+            <summary>
+            删除一个用户
+            </summary>
+            <param name="id">id</param>
             <returns></returns>
         </member>
     </members>

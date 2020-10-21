@@ -11,12 +11,14 @@ namespace FinanceInvoiceCompare.WebApi.Model
         [SugarColumn(IsNullable = false, IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
 
-        public DateTime CreateAt { get; set; }
+        public DateTime CreateAt { get; set; } = DateTime.Now;
 
         public string CreateBy { get; set; }
 
-        public DateTime? UpdatedAt { get; set; }
+        [SugarColumn(IsNullable = true)]
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
 
+        [SugarColumn(IsNullable = true)]
         public string UpdatedBy { get; set; }
 
     }

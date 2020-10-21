@@ -4,6 +4,7 @@ using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -41,5 +42,98 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                 Response = await roleService.QueryPage(whereExpression, model.PageIndex, model.PageSize, " ID desc ")
             };
         }
+
+
+        /// <summary>
+        /// 添加一个角色
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        public async Task<MessageModel<string>> Post([FromBody]Role model)
+        {
+            var data = new MessageModel<string>();
+
+
+            var role = await roleService.Query(x => x.RoleCode == model.RoleCode && x.IsDelete == false);
+
+            if (role.Count > 0)
+            {
+                data.Success = false;
+                data.Message = "该角色已经存在";
+            }
+            else
+            {
+                var flag = data.Success = await roleService.Add(model, null, new List<string>() { "UpdatedBy", "UpdatedAt" }) > 0;
+                if (flag)
+                {
+                    data.Message = "添加成功";
+                }
+                else
+                {
+                    data.Message = "添加失败";
+                }
+
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 更新一个角色
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Authorize]
+        public async Task<MessageModel<string>> Put([FromBody]Role model)
+        {
+            var data = new MessageModel<string>();
+
+
+
+            var flag = data.Success = await roleService.Update(model, null, new List<string>() { "CreateBy", "CreateAt" });
+            if (flag)
+            {
+                data.Message = "更新成功";
+            }
+            else
+            {
+                data.Message = "更新失败";
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// 删除一个角色
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Authorize]
+        public async Task<MessageModel<string>> Delete([FromQuery]int id)
+        {
+            var data = new MessageModel<string>();
+            if (id > 0)
+            {
+                var roleDetail = await roleService.QueryById(id);
+                roleDetail.IsDelete = true;
+
+                var flag = data.Success = await roleService.Update(roleDetail);
+
+                if (flag)
+                {
+                    data.Message = "删除成功";
+                }
+                else
+                {
+                    data.Message = "删除失败";
+                }
+
+            }
+            return data;
+        }
+
     }
 }

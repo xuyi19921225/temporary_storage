@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.roleCode" placeholder="RoleCode" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
@@ -48,11 +48,25 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
 
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑角色':'新增角色'">
+      <el-form ref="dataForm" :model="dialogData" label-width="100px" label-position="left" :rules="rules">
+        <el-form-item label="角色编码" prop="roleCode">
+          <el-input v-model="dialogData.roleCode" :disabled="dialogType==='edit'?true:false" />
+        </el-form-item>
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="dialogData.roleName" />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="confirm">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getRoleList } from '@/api/role'
+import { getRoleList, addRole, saveRole, deleteRole } from '@/api/role'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -70,6 +84,16 @@ export default {
         pageindex: 1,
         pagesize: 20,
         roleCode: ''
+      },
+      dialogVisible: false,
+      dialogType: '',
+      dialogData: {
+        roleCode: '',
+        roleName: ''
+      },
+      rules: {
+        roleCode: [{ required: true, message: '角色Code是必填项', trigger: 'blur' }],
+        roleName: [{ required: true, message: '角色名是必填项', trigger: 'blur' }]
       }
     }
   },
@@ -87,26 +111,99 @@ export default {
         this.listLoading = false
       )
     },
-     handleFilter() {
+    deleteRole(id) {
+      deleteRole({ id: id }).then(res => {
+        if (res.success === true) {
+          this.$notify({
+            title: 'Success',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: '删除失败',
+            duration: 2000
+          })
+        }
+      })
+    },
+    addRole() {
+      this.dialogData.createBy = this.$store.getters.userID
+      addRole(this.dialogData).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialogVisible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    saveRole() {
+      this.dialogData.updatedBy = this.$store.getters.userID
+      saveRole(this.dialogData).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '更新成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialogVisible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    confirm() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          if (this.dialogType === 'add') {
+            this.addRole()
+          } else {
+            this.saveRole()
+          }
+        }
+      })
+    },
+    handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
     },
     handleCreate() {
-      this.$router.push({
-        path: '/user/create'
+      this.dialogType = 'add'
+      this.dialogVisible = true
+      Object.assign(this.dialogData, this.defaultValue())
+      this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
       })
     },
     handleUpdate(row) {
-      this.$router.push({
-        path: '/user/edit',
-        query: {
+      this.dialogType = 'edit'
+      this.dialogVisible = true
+      Object.assign(this.dialogData, this.defaultValue())
+      this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
+        this.dialogData = {
           id: row.id,
-          siteID: row.siteID
+          roleCode: row.roleCode,
+          roleName: row.roleName
         }
       })
     },
     handleDelete(row, index) {
-      this.deleteUser(row.id)
+      this.deleteRole(row.id)
+    },
+    defaultValue() {
+      this.dialogData = {
+        roleCode: '',
+        roleName: ''
+      }
     }
   }
 }

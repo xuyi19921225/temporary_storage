@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.Repository.Base
 {
-    public  class BaseRepository<TEntity>:IBaseRepository<TEntity> where TEntity : class, new()
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class, new()
     {
         private readonly IUnitOfWork _unitOfWork;
         private SqlSugarClient _dbBase;
@@ -42,7 +42,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
         }
         /// <summary>
         /// 功能描述:根据ID查询一条数据
-        
+
         /// </summary>
         /// <param name="objId">id（必须指定主键特性 [SugarColumn(IsPrimaryKey=true)]），如果是联合主键，请使用Where条件</param>
         /// <param name="blnUseCache">是否使用缓存</param>
@@ -55,7 +55,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:根据ID查询数据
-        
+
         /// </summary>
         /// <param name="lstIds">id列表（必须指定主键特性 [SugarColumn(IsPrimaryKey=true)]），如果是联合主键，请使用Where条件</param>
         /// <returns>数据实体列表</returns>
@@ -98,6 +98,31 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
             {
                 return await insert.InsertColumns(insertColumns).ExecuteReturnIdentityAsync();
             }
+        }
+
+        /// <summary>
+        /// 插入尸体
+        /// </summary>
+        /// <param name="entity">实体</param>
+        /// <param name="lstColumns">插入字段</param>
+        /// <param name="lstIgnoreColumns">忽略字段</param>
+        /// <returns></returns>
+        public async Task<int> Add(
+       TEntity entity,
+       List<string> lstColumns = null,
+       List<string> lstIgnoreColumns = null
+         )
+        {
+            IInsertable<TEntity> add = _db.Insertable(entity);
+            if (lstIgnoreColumns != null && lstIgnoreColumns.Count > 0)
+            {
+                add = add.IgnoreColumns(lstIgnoreColumns.ToArray());
+            }
+            if (lstColumns != null && lstColumns.Count > 0)
+            {
+                add = add.InsertColumns(lstColumns.ToArray());
+            }
+            return await add.ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -219,7 +244,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询所有数据
-        
+
         /// </summary>
         /// <returns>数据列表</returns>
         public async Task<List<TEntity>> Query()
@@ -229,7 +254,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询数据列表
-        
+
         /// </summary>
         /// <param name="strWhere">条件</param>
         /// <returns>数据列表</returns>
@@ -241,7 +266,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询数据列表
-        
+
         /// </summary>
         /// <param name="whereExpression">whereExpression</param>
         /// <returns>数据列表</returns>
@@ -252,7 +277,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询一个列表
-        
+
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="strOrderByFileds">排序字段，如name asc,age desc</param>
@@ -277,7 +302,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询一个列表
-        
+
         /// </summary>
         /// <param name="strWhere">条件</param>
         /// <param name="strOrderByFileds">排序字段，如name asc,age desc</param>
@@ -291,7 +316,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询前N条数据
-        
+
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="intTop">前N条</param>
@@ -308,7 +333,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:查询前N条数据
-        
+
         /// </summary>
         /// <param name="strWhere">条件</param>
         /// <param name="intTop">前N条</param>
@@ -347,7 +372,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:分页查询
-        
+
         /// </summary>
         /// <param name="whereExpression">条件表达式</param>
         /// <param name="intPageIndex">页码（下标0）</param>
@@ -367,7 +392,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
 
         /// <summary>
         /// 功能描述:分页查询
-        
+
         /// </summary>
         /// <param name="strWhere">条件</param>
         /// <param name="intPageIndex">页码（下标0）</param>

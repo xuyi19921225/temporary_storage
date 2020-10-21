@@ -24,7 +24,7 @@ export function getUserList(params) {
   })
 }
 
-export function AddUser(data) {
+export function addUser(data) {
   return request({
     url: '/User',
     method: 'post',
@@ -44,22 +44,6 @@ export function deleteUser(params) {
   return request({
     url: '/User',
     method: 'delete',
-    params
-  })
-}
-
-export function getUserInfoByID(params) {
-  return request({
-    url: '/User/GetUserInfoByID',
-    method: 'get',
-    params
-  })
-}
-
-export function getSAPUserInfoByWorkdayID(params) {
-  return request({
-    url: '/User/GetSAPUserInfoByWorkdayID',
-    method: 'get',
     params
   })
 }

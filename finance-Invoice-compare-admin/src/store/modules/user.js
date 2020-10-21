@@ -8,8 +8,10 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
+    userID: '',
     avatar: '',
     roles: [],
+    roleID: '',
     company: '',
     asyncRoutes: []
   }
@@ -26,6 +28,9 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+  },
+  SET_USERID: (state, userID) => {
+    state.userID = userID
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -75,6 +80,7 @@ const actions = {
           if (res.success === true) {
             const data = res.response
             commit('SET_NAME', data.userName)
+            commit('SET_USERID', data.userID)
             commit('SET_ROLES', data.roleName)
             commit('SET_ROLEID', data.roleID)
             commit('SET_COMPANY', data.companyCode)

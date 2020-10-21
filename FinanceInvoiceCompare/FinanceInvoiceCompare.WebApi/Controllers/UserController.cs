@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.Common;
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
@@ -67,6 +69,98 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                 Success = true,
                 Response = await userService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
             };
+        }
+
+
+        /// <summary>
+        /// 添加一个用户
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Authorize]
+        public async Task<MessageModel<string>> Post([FromBody]User model)
+        {
+            var data = new MessageModel<string>();
+
+
+            var user = await userService.Query(x => x.NTID == model.NTID && x.IsDelete == false);
+
+            if (user.Count > 0)
+            {
+                data.Success = false;
+                data.Message = "该用户已经存在";
+            }
+            else
+            {
+                var flag = data.Success = await userService.Add(model, null, new List<string>() { "UpdatedBy","UpdatedAt" }) > 0;
+                if (flag)
+                {
+                    data.Message = "添加成功";
+                }
+                else
+                {
+                    data.Message = "添加失败";
+                }
+
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 更新一个用户
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Authorize]
+        public async Task<MessageModel<string>> Put([FromBody]User model)
+        {
+            var data = new MessageModel<string>();
+
+
+
+            var flag = data.Success = await userService.Update(model,null,new List<string>() { "CreateBy","CreateAt" });
+            if (flag)
+            {
+                data.Message = "更新成功";
+            }
+            else
+            {
+                data.Message = "更新失败";
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// 删除一个用户
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Authorize]
+        public async Task<MessageModel<string>> Delete([FromQuery]int id)
+        {
+            var data = new MessageModel<string>();
+            if (id > 0)
+            {
+                var userDetail = await userService.QueryById(id);
+                userDetail.IsDelete = true;
+
+                var flag = data.Success = await userService.Update(userDetail);
+
+                if (flag)
+                {
+                    data.Message = "删除成功";
+                }
+                else
+                {
+                    data.Message = "删除失败";
+                }
+
+            }
+            return data;
         }
 
     }

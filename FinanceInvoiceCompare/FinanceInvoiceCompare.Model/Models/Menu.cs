@@ -22,6 +22,6 @@
 
         public bool HasChildren { get; set; }
 
-        public bool IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

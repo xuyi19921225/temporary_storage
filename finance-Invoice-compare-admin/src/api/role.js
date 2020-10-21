@@ -2,8 +2,32 @@ import request from '@/utils/request'
 
 export function getRoleList(params) {
   return request({
-    url: '/Role',
+    url: '/role',
     method: 'get',
+    params
+  })
+}
+
+export function addRole(data) {
+  return request({
+    url: '/role',
+    method: 'post',
+    data
+  })
+}
+
+export function saveRole(data) {
+  return request({
+    url: '/role',
+    method: 'put',
+    data
+  })
+}
+
+export function deleteRole(params) {
+  return request({
+    url: '/role',
+    method: 'delete',
     params
   })
 }

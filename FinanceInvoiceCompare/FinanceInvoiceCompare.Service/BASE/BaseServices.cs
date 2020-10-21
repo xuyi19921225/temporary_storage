@@ -50,6 +50,17 @@ namespace FinanceInvoiceCompare.WebApi.Service.BASE
         }
 
         /// <summary>
+        /// 写入实体
+        /// </summary>
+        /// <param name="listEntity">实体集合</param>
+        /// <param name="lstColumns">插入字段</param>
+        /// <param name="lstIgnoreColumns">忽略字段</param>
+        public async Task<int> Add(TEntity listEntity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null)
+        {
+            return await BaseDal.Add(listEntity,lstColumns,lstIgnoreColumns);
+        }
+
+        /// <summary>
         /// 批量插入实体(速度快)
         /// </summary>
         /// <param name="listEntity">实体集合</param>

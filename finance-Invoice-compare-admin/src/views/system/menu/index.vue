@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.menuName" placeholder="MenuName" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
@@ -62,11 +62,67 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
 
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑角色':'新增角色'">
+      <el-form ref="dataForm" :model="dialogData" label-width="100px" label-position="left" :rules="rules">
+        <el-form-item label="父级菜单">
+          <el-select
+            v-model="dialogData.parentID"
+            class="filter-item"
+            placeholder="请选择"
+            style="width:100%"
+            clearable
+          >
+            <el-option
+              v-for="item in menuList"
+              :key="item.ID"
+              :label="item.menuName"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="菜单名称" prop="menuName">
+          <el-input v-model="dialogData.menuName" :disabled="dialogType==='edit'?true:false" />
+        </el-form-item>
+        <el-form-item label="图标" prop="icon">
+          <el-input v-model="dialogData.icon" />
+        </el-form-item>
+        <el-form-item label="路径" prop="path">
+          <el-input v-model="dialogData.path" />
+        </el-form-item>
+        <el-form-item label="重定向" prop="redirect">
+          <el-input v-model="dialogData.redirect" />
+        </el-form-item>
+        <el-form-item label="组件" prop="component">
+          <el-input v-model="dialogData.component" />
+        </el-form-item>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="dialogData.title" />
+        </el-form-item>
+        <el-form-item label="路由菜单" prop="alwaysShow">
+          <el-switch
+            v-model="dialogData.alwaysShow"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          />
+        </el-form-item>
+        <el-form-item label="是否隐藏" prop="hidden">
+          <el-switch
+            v-model="dialogData.hidden"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+          />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="confirm">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getMenus } from '@/api/menu'
+import { getMenus, addMenu, saveMenu, deleteMenu, getAllMenus } from '@/api/menu'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -84,6 +140,24 @@ export default {
         pageindex: 1,
         pagesize: 20,
         menuName: ''
+      },
+      menuList: [],
+      dialogVisible: false,
+      dialogType: '',
+      dialogData: {
+        parentID: -1,
+        menuName: '',
+        icon: '',
+        path: '',
+        redirect: '',
+        component: '',
+        title: '',
+        alwaysShow: true,
+        hidden: false
+      },
+      rules: {
+        roleCode: [{ required: true, message: '角色Code是必填项', trigger: 'blur' }],
+        roleName: [{ required: true, message: '角色名是必填项', trigger: 'blur' }]
       }
     }
   },
@@ -101,26 +175,122 @@ export default {
         this.listLoading = false
       )
     },
-     handleFilter() {
+    getAllMenus() {
+      getAllMenus().then(res => {
+        this.menuList = res.response
+      })
+    },
+    deleteMenu(id) {
+      deleteMenu({ id: id }).then(res => {
+        if (res.success === true) {
+          this.$notify({
+            title: 'Success',
+            message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        } else {
+          this.$notify.error({
+            title: 'Error',
+            message: '删除失败',
+            duration: 2000
+          })
+        }
+      })
+    },
+    addMenu() {
+      this.dialogData.createBy = this.$store.getters.userID
+      addMenu(this.dialogData).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialogVisible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    saveMenu() {
+      this.dialogData.updatedBy = this.$store.getters.userID
+      saveMenu(this.dialogData).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '更新成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialogVisible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    confirm() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          if (this.dialogType === 'add') {
+            this.addMenu()
+          } else {
+            this.saveMenu()
+          }
+        }
+      })
+    },
+    handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
     },
     handleCreate() {
-      this.$router.push({
-        path: '/user/create'
+      this.dialogType = 'add'
+      this.dialogVisible = true
+      Object.assign(this.dialogData, this.defaultValue())
+      this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
+
+        this.getAllMenus()
       })
     },
     handleUpdate(row) {
-      this.$router.push({
-        path: '/user/edit',
-        query: {
+      this.dialogType = 'edit'
+      this.dialogVisible = true
+      Object.assign(this.dialogData, this.defaultValue())
+      this.$nextTick(() => {
+        this.$refs['dataForm'].resetFields()
+
+        this.getAllMenus()
+        this.dialogData = {
           id: row.id,
-          siteID: row.siteID
+          parentID: row.parentID,
+          menuName: row.menuName,
+          icon: row.icon,
+          path: row.path,
+          redirect: row.redirect,
+          component: row.component,
+          title: row.title,
+          alwaysShow: row.alwaysShow,
+          hidden: row.hidden
         }
       })
     },
     handleDelete(row, index) {
       this.deleteUser(row.id)
+    },
+    defaultValue() {
+      this.dialogData = {
+        parentID: -1,
+        menuName: '',
+        icon: '',
+        path: '',
+        redirect: '',
+        component: '',
+        title: '',
+        alwaysShow: true,
+        hidden: false
+      }
     }
   }
 }

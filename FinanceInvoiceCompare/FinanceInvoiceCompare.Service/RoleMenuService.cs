@@ -17,13 +17,10 @@ namespace FinanceInvoiceCompare.WebApi.Service
             this.dal = dal;
         }
 
-        /// <summary>
-        /// 查询出角色-菜单全部Map属性数据
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<Menu>> GetMenusByRoleID(int roleID)
+
+        public async Task<List<Menu>> GetRMenuList()
         {
-            return await dal.GetMenusByRoleID(roleID);
+            return await dal.GetRMenuList();
         }
     }
 }

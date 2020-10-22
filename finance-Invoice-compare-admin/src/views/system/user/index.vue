@@ -178,8 +178,7 @@ export default {
       },
       defaultProps: {
         children: 'children',
-        label: 'companyName',
-        id: 'id'
+        label: 'companyName'
       }
     }
   },
@@ -277,6 +276,7 @@ export default {
     },
     confirmCompany() {
       this.dialog2Data.list = this.$refs.tree.getCheckedNodes()
+      console.log(this.$refs.tree.getCheckedNodes())
       saveUCompany(this.dialog2Data).then(res => {
         if (res.success === true) {
           this.$message({

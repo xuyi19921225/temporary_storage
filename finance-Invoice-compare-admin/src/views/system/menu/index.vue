@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.menuName" placeholder="MenuName" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.name" placeholder="name" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
@@ -28,9 +28,9 @@
           <span>{{ row.parentID }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="MenuName" align="center">
+      <el-table-column label="name" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.menuName }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Icon" align="center">
@@ -74,13 +74,13 @@
             <el-option
               v-for="item in menuList"
               :key="item.ID"
-              :label="item.menuName"
+              :label="item.name"
               :value="item.id"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="菜单名称" prop="menuName">
-          <el-input v-model="dialogData.menuName" :disabled="dialogType==='edit'?true:false" />
+        <el-form-item label="菜单名称" prop="name">
+          <el-input v-model="dialogData.name" :disabled="dialogType==='edit'?true:false" />
         </el-form-item>
         <el-form-item label="图标" prop="icon">
           <el-input v-model="dialogData.icon" />
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { getMenus, addMenu, saveMenu, deleteMenu, getAllMenus } from '@/api/menu'
+import { getMenus, addMenu, saveMenu, deleteMenu, getAllParentMenus } from '@/api/menu'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -138,14 +138,14 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        menuName: ''
+        name: ''
       },
       menuList: [],
       dialogVisible: false,
       dialogType: '',
       dialogData: {
         parentID: '',
-        menuName: '',
+        name: '',
         icon: '',
         path: '',
         redirect: '',
@@ -155,7 +155,7 @@ export default {
         hidden: false
       },
       rules: {
-        menuName: [{ required: true, message: '菜单名是必填项', trigger: 'blur' }],
+        name: [{ required: true, message: '菜单名是必填项', trigger: 'blur' }],
         path: [{ required: true, message: '路径是必填项', trigger: 'blur' }],
         component: [{ required: true, message: '组件是必填项', trigger: 'blur' }]
       }
@@ -176,7 +176,7 @@ export default {
       )
     },
     getAllMenus() {
-      getAllMenus().then(res => {
+      getAllParentMenus().then(res => {
         this.menuList = res.response
       })
     },
@@ -267,7 +267,7 @@ export default {
         this.dialogData = {
           id: row.id,
           parentID: row.parentID,
-          menuName: row.menuName,
+          name: row.name,
           icon: row.icon,
           path: row.path,
           redirect: row.redirect,
@@ -284,7 +284,7 @@ export default {
     defaultValue() {
       this.dialogData = {
         parentID: '',
-        menuName: '',
+        name: '',
         icon: '',
         path: '',
         redirect: '',

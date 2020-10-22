@@ -34,10 +34,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="250px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             编辑
+          </el-button>
+          <el-button type="primary" size="mini" @click="handleAuthorize(row)">
+            授权菜单
           </el-button>
           <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
@@ -62,11 +65,33 @@
         <el-button type="primary" @click="confirm">确认</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialog2Visible" title="授权菜单">
+      <el-form ref="menuForm" :model="dialog2Data" label-width="80px" label-position="right">
+        <el-form-item label="菜单列表">
+          <el-tree
+            ref="tree"
+            :data="menuList"
+            show-checkbox
+            node-key="id"
+            :default-expanded-keys="[2, 3]"
+            :default-checked-keys="[5]"
+            :props="defaultProps"
+            check-strictly="true"
+          />
+        </el-form-item>
+      </el-form>
+      <div style="text-align:right;">
+        <el-button type="danger" @click="dialog2Visible=false">取消</el-button>
+        <el-button type="primary" @click="confirmRoleMenu">确认</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getRoleList, addRole, saveRole, deleteRole } from '@/api/role'
+import { getTreeMenus, saveRoleMenu, getRMenuByRoleId } from '@/api/menu'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -94,6 +119,15 @@ export default {
       rules: {
         roleCode: [{ required: true, message: '角色Code是必填项', trigger: 'blur' }],
         roleName: [{ required: true, message: '角色名是必填项', trigger: 'blur' }]
+      },
+      dialog2Visible: false,
+      dialog2Data: {
+        userId: ''
+      },
+      menuList: [],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
       }
     }
   },
@@ -110,6 +144,14 @@ export default {
       }).catch(
         this.listLoading = false
       )
+    },
+    getTreeMenus(roleId) {
+      getTreeMenus().then(res => {
+        this.menuList = res.response
+        getRMenuByRoleId({ roleId: roleId }).then(res => {
+          this.$refs.tree.setCheckedKeys(res.response)
+        })
+      })
     },
     deleteRole(id) {
       deleteRole({ id: id }).then(res => {
@@ -171,6 +213,21 @@ export default {
         }
       })
     },
+    confirmRoleMenu() {
+      this.dialog2Data.list = this.$refs.tree.getCheckedNodes()
+      saveRoleMenu(this.dialog2Data).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialog2Visible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
     handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
@@ -194,6 +251,13 @@ export default {
           roleCode: row.roleCode,
           roleName: row.roleName
         }
+      })
+    },
+    handleAuthorize(row) {
+      this.dialog2Visible = true
+      this.dialog2Data.roleId = row.id
+      this.$nextTick(() => {
+        this.getTreeMenus(this.dialog2Data.roleId)
       })
     },
     handleDelete(row, index) {

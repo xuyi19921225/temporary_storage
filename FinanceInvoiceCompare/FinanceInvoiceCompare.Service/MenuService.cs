@@ -2,6 +2,8 @@
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Service.BASE;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.Service
 {
@@ -14,5 +16,6 @@ namespace FinanceInvoiceCompare.WebApi.Service
             base.BaseDal = menuRepository;
             this.menuRepository = menuRepository;
         }
+
     }
 }

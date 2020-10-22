@@ -1,13 +1,5 @@
 import request from '@/utils/request'
 
-export function getMenusByRoleID(params) {
-  return request({
-    url: '/RoleMenu',
-    method: 'get',
-    params
-  })
-}
-
 export function getMenus(params) {
   return request({
     url: '/menu',
@@ -16,9 +8,9 @@ export function getMenus(params) {
   })
 }
 
-export function getAllMenus(params) {
+export function getAllParentMenus(params) {
   return request({
-    url: '/menu/getAllMenus',
+    url: '/menu/getAllParentMenus',
     method: 'get',
     params
   })
@@ -47,3 +39,28 @@ export function deleteMenu(params) {
     params
   })
 }
+
+export function getTreeMenus(params) {
+  return request({
+    url: '/roleMenu/getTreeMenus',
+    method: 'get',
+    params
+  })
+}
+
+export function saveRoleMenu(data) {
+  return request({
+    url: '/roleMenu',
+    method: 'post',
+    data
+  })
+}
+
+export function getRMenuByRoleId(params) {
+  return request({
+    url: '/roleMenu',
+    method: 'get',
+    params
+  })
+}
+

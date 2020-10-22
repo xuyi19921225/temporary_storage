@@ -23,54 +23,24 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, menuList) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       try {
         var asyncRoutes = []
-        if (menuList && menuList.length > 0) {
-          var parentMenuList = menuList.filter((value) => value.parentID === -1)
-          // 修改数据结构
-          parentMenuList.forEach(parentElement => {
-            var parentTemp = {
-              path: parentElement.path,
-              name: parentElement.menuName,
-              component: map[parentElement.component],
-              hidden: parentElement.hidden,
-              redirect: parentElement.redirect,
-              alwaysShow: parentElement.alwaysShow,
-              meta: {
-                title: parentElement.title,
-                icon: parentElement.icon
-              }
-            }
 
-            var childrenMenuList = menuList.filter((value) => value.parentID === parentElement.id)
-            var childrenTemp = []
-            var temp = {}
-            childrenMenuList.forEach(childrenElement => {
-              temp = {
-                path: childrenElement.path,
-                name: childrenElement.menuName,
-                component: map[childrenElement.component],
-                hidden: childrenElement.hidden,
-                alwaysShow: childrenElement.alwaysShow,
-                meta: {
-                  title: childrenElement.title,
-                  icon: childrenElement.icon
-                }
-              }
-              childrenTemp.push(temp)
-            })
-
-            parentTemp.children = childrenTemp
-
-            asyncRoutes.push(parentTemp)
+        menuList.forEach(item => {
+          item.component = map[item.component]
+          item.children.forEach(children => {
+            children.component = map[children.component]
           })
-        }
+        })
+
+        asyncRoutes = menuList
         asyncRoutes.push({ path: '*', redirect: '/404', hidden: true })
         commit('SET_ROUTES', asyncRoutes)
         resolve()
       } catch (error) {
         console.log(error)
+        reject(error)
       }
     })
   }

@@ -1,6 +1,6 @@
 import { login } from '@/api/login'
 import { getUserInfoByToken } from '@/api/user'
-import { getMenusByRoleID } from '@/api/menu'
+import { getTreeMenus } from '@/api/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -100,7 +100,7 @@ const actions = {
 
   getMenu({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getMenusByRoleID({ roleId: state.roleID }).then(res => {
+      getTreeMenus({ roleId: state.roleID }).then(res => {
         try {
           if (res.success === true) {
             const data = res.response

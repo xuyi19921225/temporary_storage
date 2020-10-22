@@ -44,22 +44,23 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
 
         /// <summary>
-        /// 获取所有菜单信息
+        /// 获取所有父级菜单信息
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        [Route("GetAllMenus")]
-        public async Task<MessageModel<List<Menu>>> GetAllMenus()
+        [Route("GetAllParentMenus")]
+        public async Task<MessageModel<List<Menu>>> GetAllParentMenus()
         {
             return new MessageModel<List<Menu>>()
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await menuService.Query(x=>x.IsDelete==false)
+                Response = await menuService.Query(x=>x.IsDelete==false&&x.ParentID==-1)
             };
         }
 
+ 
 
         /// <summary>
         /// 添加一个菜单
@@ -73,7 +74,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             var data = new MessageModel<string>();
 
 
-            var menu = await menuService.Query(x => x.MenuName == model.MenuName && x.IsDelete == false);
+            var menu = await menuService.Query(x => x.Name == model.Name && x.IsDelete == false);
 
             if (menu.Count > 0)
             {

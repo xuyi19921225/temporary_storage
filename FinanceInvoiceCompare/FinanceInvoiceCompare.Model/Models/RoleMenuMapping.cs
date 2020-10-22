@@ -12,11 +12,13 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public int MenuID { get; set; }
 
+        [SugarColumn(IsOnlyIgnoreUpdate = true)]
         public DateTime CreateAt { get; set; }
 
+        [SugarColumn(IsOnlyIgnoreUpdate = true)]
         public string CreateBy { get; set; }
 
         [SugarColumn(IsIgnore = true)]
-        public List<Menu> Menus { get; set; }
+        public List<Menu> list { get; set; }
     }
 }

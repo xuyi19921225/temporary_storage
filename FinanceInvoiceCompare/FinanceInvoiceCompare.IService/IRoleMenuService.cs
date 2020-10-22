@@ -7,6 +7,6 @@ namespace FinanceInvoiceCompare.WebApi.IService
 {
     public interface IRoleMenuService: IBaseServices<RoleMenuMapping>
     {
-        Task<List<Menu>> GetMenusByRoleID(int roleID);
+        Task<List<Menu>> GetRMenuList();
     }
 }

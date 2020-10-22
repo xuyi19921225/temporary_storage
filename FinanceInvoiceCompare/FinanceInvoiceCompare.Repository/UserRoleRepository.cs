@@ -24,7 +24,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                 JoinType.Left,a2.RoleID==a3.Id
 
             })
-             .WhereIF(model.NTID != null, (a1, a2, a3) => a1.NTID == model.NTID)
+             .WhereIF(model.NTID != null, (a1, a2, a3) => a1.NTID .Contains(model.NTID))
              .Where((a1)=>a1.IsDelete==false)
              .Select((a1, a2, a3) => new UserRoleViewModel
              {

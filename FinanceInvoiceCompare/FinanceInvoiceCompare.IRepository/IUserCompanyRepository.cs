@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.IRepository
 {
-    public interface ICompanyRepository : IBaseRepository<Company>
+    public interface IUserCompanyRepository:IBaseRepository<UserCompanyMapping>
     {
-        Task<List<Company>> GetCompanyCode(int userID);
+        Task<List<Company>> GetUCompanyList();
     }
 }

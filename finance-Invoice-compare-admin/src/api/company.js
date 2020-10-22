@@ -7,3 +7,20 @@ export function getAllCompanyList(params) {
     params
   })
 }
+
+export function saveUCompany(data) {
+  return request({
+    url: '/userCompany',
+    method: 'post',
+    data
+  })
+}
+
+export function getUCompanyByUid(params) {
+  return request({
+    url: '/userCompany',
+    method: 'get',
+    params
+  })
+}
+

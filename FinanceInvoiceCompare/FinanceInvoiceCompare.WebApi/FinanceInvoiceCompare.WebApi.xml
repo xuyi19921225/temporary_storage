@@ -4,6 +4,17 @@
         <name>FinanceInvoiceCompare.WebApi</name>
     </assembly>
     <members>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.CompanyController">
+            <summary>
+            公司操作
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.GetAllCompanyList">
+            <summary>
+            获取所有公司信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.LoginController">
             <summary>
             获取认证信息
@@ -72,6 +83,12 @@
             <param name="model">model</param>
             <returns></returns>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.GetAllRoleList">
+            <summary>
+            获取所有角色信息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleController.Post(FinanceInvoiceCompare.WebApi.Model.Role)">
             <summary>
             添加一个角色
@@ -103,6 +120,25 @@
             根据角色ID获取菜单信息
             </summary>
             <param name="roleId">id</param>
+            <returns></returns>
+        </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserCompanyController">
+            <summary>
+            用户和公司操作
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserCompanyController.Post(FinanceInvoiceCompare.WebApi.Model.UserCompanyMapping)">
+            <summary>
+            保存用户和公司的授权关系
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.UserCompanyController.Get(System.Int32)">
+            <summary>
+            获取用户已选公司信息
+            </summary>
+            <param name="userId">userId</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserController">

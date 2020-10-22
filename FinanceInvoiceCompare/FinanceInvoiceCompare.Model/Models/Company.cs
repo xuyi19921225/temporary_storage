@@ -1,4 +1,6 @@
-﻿namespace FinanceInvoiceCompare.WebApi.Model
+﻿using SqlSugar;
+
+namespace FinanceInvoiceCompare.WebApi.Model
 {
     public  class Company:RootEntity
     {
@@ -7,5 +9,9 @@
         public string CompanyName { get; set; }
 
         public bool IsDelete { get; set; }
+
+
+        [SugarColumn(IsIgnore = true)]
+        public int UId { get; set; }
     }
 }

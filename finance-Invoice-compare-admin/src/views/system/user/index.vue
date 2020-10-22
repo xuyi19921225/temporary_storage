@@ -76,7 +76,7 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="dialogData.email" />
         </el-form-item>
-        <el-form-item label="角色" prop="rid">
+        <el-form-item v-if="dialogType==='edit'" label="角色" prop="rid">
           <el-select
             v-model="dialogData.rid"
             class="filter-item"
@@ -120,7 +120,7 @@
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
+        <el-button type="danger" @click="dialog2Visible=false">取消</el-button>
         <el-button type="primary" @click="confirmCompany">确认</el-button>
       </div>
     </el-dialog>
@@ -130,7 +130,7 @@
 <script>
 import { getUserList, addUser, saveUser, deleteUser } from '@/api/user'
 import { getAllRoleList } from '@/api/role'
-import { getAllCompanyList } from '@/api/company'
+import { getAllCompanyList, saveUCompany, getUCompanyByUid } from '@/api/company'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -151,7 +151,6 @@ export default {
       },
       roleList: [],
       dialogVisible: false,
-
       dialogType: '',
       dialogData: {
         ntid: '',
@@ -175,13 +174,12 @@ export default {
       companyList: [],
       dialog2Visible: false,
       dialog2Data: {
-        id: '',
-        selectCompany: []
+        userId: ''
       },
       defaultProps: {
         children: 'children',
         label: 'companyName',
-        id: 'companyCode'
+        id: 'id'
       }
     }
   },
@@ -204,9 +202,13 @@ export default {
         this.roleList = res.response
       })
     },
-    getAllCompanyList() {
+    getAllCompanyList(userId) {
+      this.$refs.tree.setCheckedKeys([])
       getAllCompanyList().then(res => {
         this.companyList = res.response
+        getUCompanyByUid({ userId: userId }).then(res => {
+          this.$refs.tree.setCheckedKeys(res.response)
+        })
       })
     },
     deleteUser(id) {
@@ -230,6 +232,7 @@ export default {
     },
     addUser() {
       this.dialogData.createBy = this.$store.getters.userID
+      this.dialogData.rid = this.dialogData.rid > 0 ? this.dialogData.rid : 0
       addUser(this.dialogData).then(res => {
         if (res.success === true) {
           this.$message({
@@ -273,7 +276,19 @@ export default {
       })
     },
     confirmCompany() {
-      console.log(this.$refs.tree.getCheckedNodes())
+      this.dialog2Data.list = this.$refs.tree.getCheckedNodes()
+      saveUCompany(this.dialog2Data).then(res => {
+        if (res.success === true) {
+          this.$message({
+            message: '保存成功',
+            type: 'success'
+          })
+          this.getList()
+          this.dialog2Visible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     },
     handleFilter() {
       this.listQuery.pageindex = 1
@@ -285,7 +300,6 @@ export default {
       Object.assign(this.dialogData, this.defaultValue())
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
-        this.getAllRoleList()
       })
     },
     handleUpdate(row) {
@@ -307,11 +321,10 @@ export default {
     },
     handleAuthorize(row) {
       this.dialog2Visible = true
-      this.dialog2Data.id = row.id
+      this.dialog2Data.userId = row.id
       this.$nextTick(() => {
-        this.getAllCompanyList()
+        this.getAllCompanyList(row.id)
       })
-      // this.companyList.push({ id: 1, lable: 'tets' })
     },
     handleDelete(row, index) {
       this.deleteUser(row.id)

@@ -6,6 +6,8 @@
 
         public string VendorChName { get; set; }
 
-        public bool IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
+
+
     }
 }

@@ -55,7 +55,7 @@ namespace FinanceInvoiceCompare.WebApi
             }).AddNewtonsoftJson(options => {
                 //忽略循环引用
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 //不使用驼峰样式的key
                 //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
             });
@@ -83,7 +83,6 @@ namespace FinanceInvoiceCompare.WebApi
      
             #endregion
 
-
             #region 注册服务
             services.AddScoped<IJwtSerivce, JwtService>();
             services.AddScoped<ILDAPService, LDAPService>();
@@ -94,6 +93,7 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IMenuRepository, MenuRepository>();
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IUserCompanyRepository, UserCompanyRepository>();
+            services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleMenuService, RoleMenuService>();
             services.AddScoped<IRoleService, RoleService>();
@@ -101,6 +101,7 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IUserRoleService, UserRoleService>();
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IUserCompanyService, UserCompanyService>();
+            services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 
@@ -134,7 +135,6 @@ namespace FinanceInvoiceCompare.WebApi
                 };
             });
             #endregion
-
 
             #region 注册Swaager服务
             services.AddSwaggerGen(option =>

@@ -5,7 +5,7 @@
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         新增
       </el-button>
     </div>
@@ -48,12 +48,12 @@
           <span>{{ row.path }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="200px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             编辑
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="row.status!='deleted'" icon="el-icon-delete" size="mini" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>
@@ -156,6 +156,7 @@ export default {
       },
       rules: {
         name: [{ required: true, message: '菜单名是必填项', trigger: 'blur' }],
+        // path: [{ validator: this.verifyPath, trigger: 'blur' }],
         path: [{ required: true, message: '路径是必填项', trigger: 'blur' }],
         component: [{ required: true, message: '组件是必填项', trigger: 'blur' }]
       }
@@ -165,6 +166,13 @@ export default {
     this.getList()
   },
   methods: {
+    // verifyPath(rule, value, callback) {
+    //   if (this.dialogData.parentID !== '' && this.dialogData.parentID > -1 && value === '') {
+    //     callback(new Error('路径是必填项'))
+    //   } else {
+    //     callback()
+    //   }
+    // },
     getList() {
       this.listLoading = true
       getMenus(this.listQuery).then(res => {

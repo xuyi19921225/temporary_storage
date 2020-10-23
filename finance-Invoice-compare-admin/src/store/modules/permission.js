@@ -6,7 +6,8 @@ const map = {
   user: () => import('@/views/system/user/index'),
   role: () => import('@/views/system/role/index'),
   menu: () => import('@/views/system/menu/index'),
-  vendor: () => import('@/views/system/vendor/index')
+  vendor: () => import('@/views/system/vendor/index'),
+  sapInvoice: () => import('@/views/sap/invoice/index')
 }
 
 const state = {

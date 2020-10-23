@@ -5,7 +5,7 @@
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
-      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
         新增
       </el-button>
     </div>
@@ -48,15 +48,15 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="300px" class-name="small-padding fixed-width">
+      <el-table-column label="Actions" align="center" width="350px" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
             分配角色
           </el-button>
-          <el-button type="primary" size="mini" @click="handleAuthorize(row)">
+          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleAuthorize(row)">
             授权公司
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="row.status!='deleted'" size="mini" icon="el-icon-delete" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>

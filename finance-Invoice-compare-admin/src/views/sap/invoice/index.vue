@@ -146,6 +146,7 @@ export default {
         })
 
         outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+          range: 'A9',
           defval: ''
         })
 

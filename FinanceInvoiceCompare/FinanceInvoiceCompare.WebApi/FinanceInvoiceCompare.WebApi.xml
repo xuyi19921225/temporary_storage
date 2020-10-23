@@ -44,9 +44,9 @@
             <param name="model">model</param>
             <returns></returns>
         </member>
-        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.GetAllMenus">
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.MenuController.GetAllParentMenus">
             <summary>
-            获取所有菜单信息
+            获取所有父级菜单信息
             </summary>
             <returns></returns>
         </member>
@@ -115,11 +115,24 @@
             角色和菜单关系
             </summary>
         </member>
-        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController.GetMenus(System.Int32)">
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController.GetTreeMenus(System.Int32)">
             <summary>
-            根据角色ID获取菜单信息
+            获取所有二级菜单树
             </summary>
-            <param name="roleId">id</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController.Get(System.Int32)">
+            <summary>
+            获取角色已选菜单信息
+            </summary>
+            <param name="roleId">roleId</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.RoleMenuController.Post(FinanceInvoiceCompare.WebApi.Model.RoleMenuMapping)">
+            <summary>
+            保存角色和菜单的授权关系
+            </summary>
+            <param name="model">model</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserCompanyController">
@@ -179,6 +192,27 @@
             删除一个用户
             </summary>
             <param name="id">id</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.VendorController.Get(FinanceInvoiceCompare.WebApi.Model.VendorRequestModel)">
+            <summary>
+            获取供应商信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.VendorController.Post(System.Collections.Generic.List{FinanceInvoiceCompare.WebApi.Model.Vendor})">
+            <summary>
+            添加供应商信息
+            </summary>
+            <param name="vendors">供应商信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.VendorController.Put(FinanceInvoiceCompare.WebApi.Model.Vendor)">
+            <summary>
+            更新一个供应商
+            </summary>
+            <param name="model">model</param>
             <returns></returns>
         </member>
     </members>

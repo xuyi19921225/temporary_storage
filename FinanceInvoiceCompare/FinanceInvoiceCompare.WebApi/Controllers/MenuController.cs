@@ -83,7 +83,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             }
             else
             {
-                var flag = data.Success = await menuService.Add(model, null, new List<string>() { "UpdatedBy", "UpdatedAt" }) > 0;
+                var flag = data.Success = await menuService.Add(model) > 0;
                 if (flag)
                 {
                     data.Message = "添加成功";
@@ -110,7 +110,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
 
 
-            var flag = data.Success = await menuService.Update(model, null, new List<string>() { "CreateBy", "CreateAt" });
+            var flag = data.Success = await menuService.Update(model);
             if (flag)
             {
                 data.Message = "更新成功";

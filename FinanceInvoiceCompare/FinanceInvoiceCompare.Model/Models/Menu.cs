@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using Newtonsoft.Json;
+using SqlSugar;
 using System.Collections.Generic;
 
 namespace FinanceInvoiceCompare.WebApi.Model
@@ -33,6 +34,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public int RId { get; set; }
 
         [SugarColumn(IsIgnore = true)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public List<Menu> Children { get; set; }
     }
 

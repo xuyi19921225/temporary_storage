@@ -1,7 +1,20 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.value" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select
+        v-model="listQuery.companyCode"
+        class="filter-item"
+        placeholder="请选择公司编码"
+        style="width: 150px;"
+      >
+        <el-option
+          v-for="item in companyCodeList"
+          :key="item.Id"
+          :label="item.code"
+          :value="item.Id"
+        />
+      </el-select>
+      <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
@@ -21,7 +34,7 @@
         <el-button type="primary" :loading="uploadLoading" icon="el-icon-upload">批量导入</el-button>
       </el-upload>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download">
-        <a :href="`${path}vendor_template.xlsx`" download="vendor_template.xlsx">模板下载</a>
+        <a :href="`${path}SAP scan_template.xlsx`" download="SAP scan_template.xlsx">模板下载</a>
       </el-button>
     </div>
 
@@ -40,12 +53,27 @@
       </el-table-column>
       <el-table-column label="VendorCode" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.vendorCode }}</span>
+          <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
       <el-table-column label="VendorChName" align="center">
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Reference" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.reference }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="CompanyCode" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.cocd }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="DocumentNo" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.documentNo }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
@@ -59,13 +87,23 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑供应商':'新增供应商'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑发票':'新增发票'">
       <el-form ref="dataForm" :model="dialogData" label-width="140px" label-position="left" :rules="rules">
-        <el-form-item label="VendorCode" prop="vendorCode">
-          <el-input v-model="dialogData.vendorCode" :disabled="dialogType==='edit'?true:false" />
+        <el-form-item label="invoiceNumber" prop="invoiceNumber">
+          <el-input v-model="dialogData.invoiceNumber" :disabled="dialogType==='edit'?true:false" />
         </el-form-item>
-        <el-form-item label="VendorChName" prop="vendorChName">
-          <el-input v-model="dialogData.vendorChName" />
+        <el-form-item label="InvoiceDate" prop="invoiceDate">
+          <el-date-picker
+            v-model="dialogData.invoiceDate"
+            align="right"
+            type="date"
+            placeholder="选择日期"
+            :picker-options="pickerOptions"
+            style="width:100%"
+          />
+        </el-form-item>
+        <el-form-item label="Amount" prop="amount">
+          <el-input v-model.number="dialogData.amount" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -77,18 +115,17 @@
 </template>
 
 <script>
-import { addVendor, saveVendor, getVendorList } from '@/api/vendor'
+import { getSiteInvoiceList, addSiteInvoice, saveInvoice } from '@/api/invoice'
 import XLSX from 'xlsx'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'MenuListTable',
+  name: 'SiteInvoiceListTable',
   components: { Pagination },
   directives: { waves },
   data() {
     return {
-
       path: process.env.BASE_URL,
       tableKey: 0,
       list: null,
@@ -97,18 +134,47 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        value: ''
+        invoiceNumber: '',
+        companyCode: ''
       },
+      companyCodeList: this.$store.getters.company,
       uploadLoading: false,
       dialogVisible: false,
       dialogType: '',
       dialogData: {
-        vendorCode: '',
-        vendorChName: ''
+        invoiceNumber: '',
+        invoiceDate: '',
+        amount: 0
       },
       rules: {
-        vendorCode: [{ required: true, message: '供应商编码是必填项', trigger: 'blur' }],
-        vendorChName: [{ required: true, message: '供应商名称是必填项', trigger: 'blur' }]
+        invoiceNumber: [{ required: true, message: '发票号是必填项', trigger: 'blur' }],
+        invoiceDate: [{ required: true, message: '发票日期是必填项', trigger: 'blur' }],
+        amount: [{ required: true, message: '金额是必填项', trigger: 'blur' }]
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now()
+        },
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date())
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24)
+            picker.$emit('pick', date)
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date()
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+            picker.$emit('pick', date)
+          }
+        }]
       }
     }
   },
@@ -118,7 +184,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getVendorList(this.listQuery).then(res => {
+      getSiteInvoiceList(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false
@@ -132,6 +198,7 @@ export default {
       var wb
       var outdata
       var reader = new FileReader()
+
       // //readAsArrayBuffer异步按字节读取文件内容，结果用ArrayBuffer对象表示,执行结束调用
       reader.onload = e => {
         var bytes = new Uint8Array(e.target.result)
@@ -145,21 +212,31 @@ export default {
           type: 'binary'
         })
 
-        outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
-          range: 'A9',
-          defval: ''
+        // //获取Sheet
+        var sheet = wb.Sheets[wb.SheetNames[0]]
+
+        // //获取sheet中所有有效的单元格
+        var range = XLSX.utils.decode_range(sheet['!ref'])
+
+        // //设置起始单元格range
+        range.s.c = 1
+        range.s.r = 9
+
+        var header = ['Vendor', 'Reference', '', 'CoCd', 'DocumentNo', 'Type', 'NetDueDt', 'PstngDate', 'DocDate', 'Curr', 'AmountInDC', 'PBk', 'Text', 'BlineDate', 'AmtLC2', 'Assign', 'GL', 'ClrngDoc']
+
+        outdata = XLSX.utils.sheet_to_json(sheet, {
+          range: XLSX.utils.encode_range(range),
+          defval: '',
+          header: header,
+          raw: false
         })
 
         if (outdata.length > 0) {
-          const vendors = []
           outdata.forEach((value, index, arr) => {
-            vendors.push({
-              vendorCode: value.VendorCode,
-              vendorChName: value.VendorChName,
-              createBy: this.$store.getters.userID
-            })
+            arr[index].createBy = this.$store.getters.userID
           })
-          addVendor(vendors)
+
+          addSiteInvoice(outdata)
             .then(res => {
               this.uploadLoading = false
               if (res.success === true) {
@@ -189,12 +266,21 @@ export default {
       }
       reader.readAsArrayBuffer(file.file)
     },
-    onChange(file, fileList) {
-      this.$refs['upload'].clearFiles()
+    confirm() {
+      this.$refs['dataForm'].validate(valid => {
+        if (valid) {
+          if (this.dialogType === 'add') {
+            this.addSiteInvoice()
+          } else {
+            this.saveInvoice()
+          }
+        }
+      })
     },
-    addVendor() {
+    addSiteInvoice() {
       this.dialogData.createBy = this.$store.getters.userID
-      addVendor([this.dialogData]).then(res => {
+      this.dialogData.dataSource = 'Manual'
+      addSiteInvoice([this.dialogData]).then(res => {
         if (res.success === true) {
           this.$message({
             message: '添加成功',
@@ -207,9 +293,9 @@ export default {
         }
       })
     },
-    saveVendor() {
+    saveInvoice() {
       this.dialogData.updatedBy = this.$store.getters.userID
-      saveVendor(this.dialogData).then(res => {
+      saveInvoice(this.dialogData).then(res => {
         if (res.success === true) {
           this.$message({
             message: '更新成功',
@@ -222,28 +308,26 @@ export default {
         }
       })
     },
-    confirm() {
-      this.$refs['dataForm'].validate(valid => {
-        if (valid) {
-          if (this.dialogType === 'add') {
-            this.addVendor()
-          } else {
-            this.saveVendor()
-          }
-        }
-      })
+    onChange(file, fileList) {
+      this.$refs['upload'].clearFiles()
     },
     handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
     },
     handleCreate() {
-      this.dialogType = 'add'
-      this.dialogVisible = true
-      Object.assign(this.dialogData, this.defaultValue())
-      this.$nextTick(() => {
-        this.$refs['dataForm'].resetFields()
-      })
+      if (this.listQuery.companyCode === '') {
+        this.$message.warning({
+          message: '请先选择公司编码，再进行上传或者新增操作'
+        })
+      } else {
+        this.dialogType = 'add'
+        this.dialogVisible = true
+        Object.assign(this.dialogData, this.defaultValue())
+        this.$nextTick(() => {
+          this.$refs['dataForm'].resetFields()
+        })
+      }
     },
     handleUpdate(row) {
       this.dialogType = 'edit'
@@ -253,15 +337,17 @@ export default {
         this.$refs['dataForm'].resetFields()
         this.dialogData = {
           id: row.id,
-          vendorCode: row.vendorCode,
-          vendorChName: row.vendorChName
+          invoiceNumber: row.invoiceNumber,
+          invoiceDate: row.invoiceDate,
+          amount: row.amount
         }
       })
     },
     defaultValue() {
       this.dialogData = {
-        vendorCode: '',
-        vendorChName: ''
+        invoiceNumber: '',
+        invoiceDate: '',
+        amount: 0
       }
     }
   }

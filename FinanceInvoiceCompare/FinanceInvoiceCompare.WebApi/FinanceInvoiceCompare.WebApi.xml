@@ -15,6 +15,52 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.GetCompanyById(System.Object[])">
+             <summary>
+            根据CompanyId获取Campany信息
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController">
+            <summary>
+            SAP发票操作
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetSAPInvoiceList(FinanceInvoiceCompare.WebApi.Model.SAPRequestModel)">
+            <summary>
+            获取SAP发票信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.AddSAPInvoice(System.Collections.Generic.List{FinanceInvoiceCompare.WebApi.Model.SAPInvoiceData})">
+            <summary>
+            添加SAP发票信息
+            </summary>
+            <param name="sapInvoice">sap发票信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.AddSiteInvoice(System.Collections.Generic.List{FinanceInvoiceCompare.WebApi.Model.Invoice})">
+            <summary>
+            添加Site发票信息
+            </summary>
+            <param name="invoices">发票信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetSiteInvoiceList(FinanceInvoiceCompare.WebApi.Model.SiteInvoiceRequestModel)">
+            <summary>
+            获取Site发票信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.SaveInvoice(FinanceInvoiceCompare.WebApi.Model.Invoice)">
+            <summary>
+            更新发票
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.LoginController">
             <summary>
             获取认证信息

@@ -1,14 +1,22 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FinanceInvoiceCompare.WebApi.Model
 {
     public class SAPInvoiceData:RootEntity
     {
+        [SugarColumn(ColumnName = "Cocd")]//别名
         public string Cocd { get; set; }
 
-        public string Document { get; set; }
+        public string Vendor { get; set; }
 
-        public DateTime NetDueDT { get; set; }
+        public string Reference { get; set; }
+
+        public string DocumentNo { get; set; }
+
+        public DateTime  NetDueDT { get; set; }
 
         public DateTime PstngDate { get; set; }
 
@@ -22,6 +30,8 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string Text { get; set; }
 
+        public string Type { get; set; }
+
         public DateTime BlineDate { get; set; }
 
         public float AmtLC2 { get; set; }
@@ -34,10 +44,10 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool IsDelete { get; set; }
 
-        public char IsMatch { get; set; }
+        public char IsMatch { get; set; }='N';
 
         public int Check { get; set; }
 
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
     }
 }

@@ -45,5 +45,22 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         }
 
 
+        /// <summary>
+        ///根据CompanyId获取Campany信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetCompanyById")]
+        public async Task<MessageModel<List<Company>>> GetCompanyById([FromQuery] object[] ids)
+        {
+            return new MessageModel<List<Company>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await companyService.QueryByIDs(ids)
+            };
+        }
+
     }
 }

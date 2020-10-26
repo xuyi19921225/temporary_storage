@@ -94,6 +94,8 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IUserRoleRepository, UserRoleRepository>();
             services.AddScoped<IUserCompanyRepository, UserCompanyRepository>();
             services.AddScoped<IVendorRepository, VendorRepository>();
+            services.AddScoped<ISAPRepository, SAPRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleMenuService, RoleMenuService>();
             services.AddScoped<IRoleService, RoleService>();
@@ -102,6 +104,8 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<ICompanyService, CompanyService>();
             services.AddScoped<IUserCompanyService, UserCompanyService>();
             services.AddScoped<IVendorService, VendorService>();
+            services.AddScoped<ISAPService, SAPService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 

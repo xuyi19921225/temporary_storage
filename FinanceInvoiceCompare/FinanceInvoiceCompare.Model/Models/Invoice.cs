@@ -10,14 +10,14 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public float Amount { get; set; }
 
-        public DateTime EntryDate { get; set; }
+        public DateTime EntryDate { get; set; } = DateTime.Now;
 
         public string DataSource { get; set; }
 
         public DateTime MatchDate { get; set; }
 
-        public char IsMatch { get; set; }
+        public char IsMatch { get; set; } = 'N';
 
-        public bool IsDelete { get; set; }
+        public bool IsDelete { get; set; } = false;
     }
 }

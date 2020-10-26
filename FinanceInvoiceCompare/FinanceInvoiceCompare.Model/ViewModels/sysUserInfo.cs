@@ -13,7 +13,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string RoleName { get; set; }
 
-        public string CompanyCode { get; set; }
+        public List<Company> Company { get; set; }
 
     }
 

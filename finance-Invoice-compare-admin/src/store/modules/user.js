@@ -12,7 +12,7 @@ const getDefaultState = () => {
     avatar: '',
     roles: [],
     roleID: '',
-    company: '',
+    company: [],
     asyncRoutes: []
   }
 }
@@ -83,7 +83,7 @@ const actions = {
             commit('SET_USERID', data.userID)
             commit('SET_ROLES', data.roleName)
             commit('SET_ROLEID', data.roleID)
-            commit('SET_COMPANY', data.companyCode)
+            commit('SET_COMPANY', data.company)
             commit('SET_AVATAR', '')
             resolve()
           } else {

@@ -31,17 +31,7 @@ namespace FinanceInvoiceCompare.WebApi.Service
 
             List<Company> companyList=await companyRepository.GetCompanyCode(sysUserInfo.UserID);
 
-            if (companyList.Count > 0) 
-            {
-                string companyCode = string.Empty;
-                foreach (var item in companyList)
-                {
-                    companyCode += item.Code + ",";
-                }
-
-                sysUserInfo.CompanyCode = companyCode.Substring(0, companyCode.Length - 1);
-            }
-
+            sysUserInfo.Company = companyList;
 
             return sysUserInfo;
         }

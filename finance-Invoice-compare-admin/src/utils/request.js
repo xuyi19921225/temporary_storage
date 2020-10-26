@@ -63,14 +63,14 @@ service.interceptors.response.use(
           break
         case 422:
           Message({
-            message: error.response.data.title || 'Error',
+            message: error.response.message || 'Error',
             type: 'error',
             duration: 5 * 1000
           })
           break
         default:
           Message({
-            message: error.response.data.title || 'Error',
+            message: error.response.message || 'Error',
             type: 'error',
             duration: 5 * 1000
           })

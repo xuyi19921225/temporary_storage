@@ -24,3 +24,11 @@ export function getUCompanyByUid(params) {
   })
 }
 
+export function getCompanyById(params) {
+  return request({
+    url: '/Company/getCompanyById',
+    method: 'get',
+    params
+  })
+}
+

@@ -117,6 +117,18 @@
             <param name="id">id</param>
             <returns></returns>
         </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.ReportController">
+            <summary>
+            报表操作类
+            </summary>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetMatchInvoiceRepost(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取发票Match信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleController">
             <summary>
             角色逻辑

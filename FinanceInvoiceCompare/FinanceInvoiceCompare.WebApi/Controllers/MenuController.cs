@@ -34,6 +34,13 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Authorize]
         public async Task<MessageModel<PageModel<Menu>>> Get([FromQuery] MenuRequestModel model)
         {
+            //List<string> values = new List<string>() { "aaa", "bbb", "cccs1" };
+            //var exp = Expressionable.Create<Order>();
+            //foreach (var item in values)
+            //{
+            //    exp.Or(it => it.Name.Contains(item));
+            //}
+            //db.Queryable<Order>().Where(exp.ToExpression()).ToList();
             return new MessageModel<PageModel<Menu>>()
             {
                 Message = "获取信息成功",

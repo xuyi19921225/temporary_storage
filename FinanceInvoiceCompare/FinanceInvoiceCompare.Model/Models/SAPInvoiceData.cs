@@ -12,6 +12,8 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string Vendor { get; set; }
 
+
+
         public string Reference { get; set; }
 
         public string DocumentNo { get; set; }
@@ -44,10 +46,17 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool IsDelete { get; set; }
 
-        public char IsMatch { get; set; }='N';
+        public string Remark { get; set; } = string.Empty;
 
+        [SugarColumn(IsIgnore = true)]
+        public string VendorChName { get; set; }
+
+        [SugarColumn(IsIgnore = true)]
+        public string IsMatch { get; set; }
+
+        [SugarColumn(IsIgnore = true)]
         public int Check { get; set; }
 
-        public string Remark { get; set; } = string.Empty;
+
     }
 }

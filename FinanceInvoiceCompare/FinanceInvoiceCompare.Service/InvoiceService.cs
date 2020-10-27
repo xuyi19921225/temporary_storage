@@ -2,6 +2,7 @@
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Service.BASE;
+using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.Service
 {
@@ -12,6 +13,11 @@ namespace FinanceInvoiceCompare.WebApi.Service
         {
             this.invoiceRepository = invoiceRepository;
             base.BaseDal = invoiceRepository;
+        }
+
+        public async Task<PageModel<UMatchInvoiceReportViewModel>> GetMatchInvoiceRepost(MatchInvoiceReportRequestModel model) 
+        {
+            return await invoiceRepository.GetMatchInvoiceRepost(model);
         }
     }
 }

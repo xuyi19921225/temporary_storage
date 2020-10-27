@@ -8,7 +8,8 @@ const map = {
   menu: () => import('@/views/system/menu/index'),
   vendor: () => import('@/views/system/vendor/index'),
   sapInvoice: () => import('@/views/invoice/sap/index'),
-  siteInvoice: () => import('@/views/invoice/site/index')
+  siteInvoice: () => import('@/views/invoice/site/index'),
+  matchReport: () => import('@/views/report/match-invoice/index')
 }
 
 const state = {

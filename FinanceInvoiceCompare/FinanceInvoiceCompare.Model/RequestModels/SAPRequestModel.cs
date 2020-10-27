@@ -6,6 +6,6 @@ namespace FinanceInvoiceCompare.WebApi.Model
 {
     public class SAPRequestModel: PageEntity
     {
-        public string InvoiceNo { get; set; }
+        public string InvoiceNumber { get; set; }
     }
 }

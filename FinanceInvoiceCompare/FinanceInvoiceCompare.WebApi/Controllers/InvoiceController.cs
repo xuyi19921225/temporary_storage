@@ -42,7 +42,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await sAPService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
+                Response = await sAPService.GetSAPInvoiceList(model)
             };
         }
 

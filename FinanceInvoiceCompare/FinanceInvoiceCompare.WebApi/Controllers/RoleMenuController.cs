@@ -158,6 +158,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                     }
                     else
                     {
+                        unitOfWork.RollbackTran();
                         data.Message = "保存失败";
                     }
                 }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.Common;
+using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace FinanceInvoiceCompare.WebApi.Controllers
 {
@@ -20,11 +22,15 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
     {
         private readonly ISAPService sAPService;
         private readonly IInvoiceService invoiceService;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ILogger<InvoiceController> logger;
 
-        public InvoiceController(ISAPService sAPService,IInvoiceService invoiceService)
+        public InvoiceController(ISAPService sAPService, IInvoiceService invoiceService, IUnitOfWork unitOfWork, ILogger<InvoiceController> logger)
         {
             this.sAPService = sAPService;
             this.invoiceService = invoiceService;
+            this.unitOfWork = unitOfWork;
+            this.logger = logger;
         }
 
 
@@ -91,35 +97,74 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         public async Task<MessageModel<string>> AddSiteInvoice([FromBody] List<Invoice> invoices)
         {
             var data = new MessageModel<string>();
-
-            if (invoices.Count > 0)
+            try
             {
-
-                var invoiceNos = invoices.Select(x => x.InvoiceNumber).ToArray();
-
-                //// 检查是否存在相同的发票号
-                var exsitsVendors = (await invoiceService.Query(x => x.IsDelete == false && invoiceNos.Contains(x.InvoiceNumber)));
-
-                bool flag = false;
-
-                if (exsitsVendors.Count > 0)
+                unitOfWork.BeginTran();
+                if (invoices.Count > 0)
                 {
-                    data.Success = flag;
-                    data.Message = "存在相同的InvoiceNumber，请检查";
-                }
-                else
-                {
-                    data.Success = flag = await invoiceService.Add(invoices) > 0;
 
-                    if (flag)
+                    var invoiceNumbers = invoices.Select(x => x.InvoiceNumber).ToArray();
+                    var companyCodes = invoices.Select(x => x.CompanyCode).ToArray();
+
+
+
+                    // 检查是否存在相同的发票号
+                    var exsitsVendors = await invoiceService.Query(x => x.IsDelete == false && invoiceNumbers.Contains(x.InvoiceNumber) && companyCodes.Contains(x.CompanyCode));
+
+                    //var s = await invoiceService.Query(x => x.IsDelete == false);
+                    //var list = from item in s
+                    //           join item2 in invoices on new { item.CompanyCode ,item.InvoiceNumber} equals new { item2.CompanyCode,item2.InvoiceNumber }
+                    //           select item;
+
+                    //var exsitsVendors = list;
+
+                    if (exsitsVendors.Count > 0)
                     {
-                        data.Message = "添加成功";
+                        data.Success = false;
+                        data.Message = "存在相同的InvoiceNumber，请检查";
                     }
                     else
                     {
-                        data.Message = "添加失败";
+                        //// 添加发票信息
+                        bool flag = await invoiceService.Add(invoices) > 0;
+
+                        //// 查询上传的发票相匹配的SAP发票的List
+                        var matchList = (await sAPService.Query(x => x.IsDelete == false && invoiceNumbers.Contains(x.Reference) && companyCodes.Contains(x.Cocd))).Select(x=>new {x.Reference,x.Cocd }).Distinct().ToList();
+
+                        var updateList=new List<Invoice>();
+
+                        if (matchList.Count > 0)
+                        {
+                            matchList.ForEach(item =>
+                            {
+                                updateList.Add(new Invoice() { InvoiceNumber = item.Reference, CompanyCode = item.Cocd, MatchDate = DateTime.Now });
+                            });
+
+                            //// 更新Site发票MatchDate
+                            data.Success = flag = await invoiceService.Update(updateList, new List<string>() { "MatchDate", "InvoiceNumber", "CompanyCode" }, null, x => new { x.InvoiceNumber, x.CompanyCode });
+                        }
+                        else 
+                        {
+                            data.Success = flag;
+                        }
+
+                
+                        if (flag)
+                        {
+                            data.Message = "添加成功";
+                        }
+                        else
+                        {
+                            unitOfWork.RollbackTran();
+                            data.Message = "添加失败";
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                unitOfWork.RollbackTran();
+                logger.LogError(ex, ex.Message);
             }
 
             return data;

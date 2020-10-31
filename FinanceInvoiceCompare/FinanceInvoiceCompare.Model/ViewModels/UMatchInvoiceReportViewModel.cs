@@ -10,15 +10,15 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public string CompanyCode { get; set; }
         public string InvoiceNumber { get; set; }
 
-        public DateTime InvoiceDate { get; set; }
+        public DateTime? InvoiceDate { get; set; }
 
-        public float Amount { get; set; }
+        public float? Amount { get; set; }
 
-        public DateTime EntryDate { get; set; }
+        public DateTime? EntryDate { get; set; }
 
         public string DataSource { get; set; }
 
-        public DateTime MatchDate { get; set; }
+        public DateTime? MatchDate { get; set; }
 
         public string IsMatch { get; set; }
 
@@ -31,15 +31,15 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string DocumentNo { get; set; }
 
-        public DateTime NetDueDT { get; set; }
+        public DateTime? NetDueDT { get; set; }
 
-        public DateTime PstngDate { get; set; }
+        public DateTime? PstngDate { get; set; }
 
-        public DateTime DocDate { get; set; }
+        public DateTime? DocDate { get; set; }
 
         public string Curr { get; set; }
 
-        public float AmountInDC { get; set; }
+        public float? AmountInDC { get; set; }
 
         public string PBk { get; set; }
 
@@ -47,18 +47,18 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string Type { get; set; }
 
-        public DateTime BlineDate { get; set; }
+        public DateTime? BlineDate { get; set; }
 
-        public float AmtLC2 { get; set; }
+        public float? AmtLC2 { get; set; }
 
         public string Assign { get; set; }
 
-        public int GL { get; set; }
+        public int? GL { get; set; }
 
         public string ClrngDoc { get; set; }
 
         public string VendorChName { get; set; }
 
-        public float Check { get; set; }
+        public float? Check { get; set; }
     }
 }

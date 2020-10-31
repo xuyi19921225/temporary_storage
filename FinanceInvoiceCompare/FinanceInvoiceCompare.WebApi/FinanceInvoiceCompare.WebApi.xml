@@ -122,11 +122,39 @@
             报表操作类
             </summary>
         </member>
-        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetMatchInvoiceRepost(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetMatchInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
             <summary>
             获取发票Match信息
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetUnMatchInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取未匹配的发票Match信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetCompareMatchInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取发票比对信息(分页)
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetAllCompareMatchInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取发票比对信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.Post(System.Collections.Generic.List{FinanceInvoiceCompare.WebApi.Model.Payment})">
+            <summary>
+            添加付款信息
+            </summary>
+            <param name="payments">付款信息</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleController">

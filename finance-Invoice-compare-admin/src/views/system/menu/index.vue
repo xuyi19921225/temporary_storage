@@ -28,9 +28,9 @@
           <span>{{ row.parentID }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="name" align="center">
+      <el-table-column label="Title" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.name }}</span>
+          <span>{{ row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Icon" align="center">
@@ -74,13 +74,13 @@
             <el-option
               v-for="item in menuList"
               :key="item.ID"
-              :label="item.name"
+              :label="item.title"
               :value="item.id"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="菜单名称" prop="name">
-          <el-input v-model="dialogData.name" :disabled="dialogType==='edit'?true:false" />
+        <el-form-item label="路由名称" prop="name">
+          <el-input v-model="dialogData.name" />
         </el-form-item>
         <el-form-item label="图标" prop="icon">
           <el-input v-model="dialogData.icon" />
@@ -155,8 +155,9 @@ export default {
         hidden: false
       },
       rules: {
-        name: [{ required: true, message: '菜单名是必填项', trigger: 'blur' }],
+        name: [{ required: true, message: '路由名是必填项', trigger: 'blur' }],
         // path: [{ validator: this.verifyPath, trigger: 'blur' }],
+        icon: [{ required: true, message: '图标是必填项', trigger: 'blur' }],
         path: [{ required: true, message: '路径是必填项', trigger: 'blur' }],
         component: [{ required: true, message: '组件是必填项', trigger: 'blur' }]
       }

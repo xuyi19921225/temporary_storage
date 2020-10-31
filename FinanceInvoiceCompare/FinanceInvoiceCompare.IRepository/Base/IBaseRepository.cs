@@ -31,6 +31,8 @@ namespace FinanceInvoiceCompare.WebApi.IRepository.Base
 
         Task<bool> Update(TEntity entity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null, string strWhere = "");
 
+        Task<bool> Update(List<TEntity> entity, List<string> lstColumns = null, List<string> lstIgnoreColumns = null, Expression<Func<TEntity, object>> WhereColumns = null);
+
         Task<List<TEntity>> Query();
         Task<List<TEntity>> Query(string strWhere);
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression);

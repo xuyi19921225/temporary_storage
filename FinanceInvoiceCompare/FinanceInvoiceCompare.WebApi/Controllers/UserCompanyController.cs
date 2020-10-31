@@ -80,12 +80,14 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                     unitOfWork.CommitTran();
 
                     data.Success = flag;
+
                     if (flag)
                     {
                         data.Message = "保存成功";
                     }
                     else
                     {
+                        unitOfWork.RollbackTran();
                         data.Message = "保存失败";
                     }
                 }

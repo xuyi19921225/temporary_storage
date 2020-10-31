@@ -12,11 +12,11 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public float Amount { get; set; }
 
+        [SugarColumn(IsOnlyIgnoreUpdate = true)]
         public DateTime EntryDate { get; set; } = DateTime.Now;
 
         public string DataSource { get; set; }
 
-        [SugarColumn(IsIgnore = true)]
         public DateTime MatchDate { get; set; }
 
         [SugarColumn(IsIgnore = true)]

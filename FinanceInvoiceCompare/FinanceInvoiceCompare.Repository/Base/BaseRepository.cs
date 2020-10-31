@@ -204,6 +204,29 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
             return await up.ExecuteCommandHasChangeAsync();
         }
 
+        public async Task<bool> Update(
+              List<TEntity> entity,
+              List<string> lstColumns = null,
+              List<string> lstIgnoreColumns = null,
+            Expression<Func<TEntity, object>> WhereColumns = null
+          )
+        {
+            IUpdateable<TEntity> up = _db.Updateable(entity);
+            if (lstIgnoreColumns != null && lstIgnoreColumns.Count > 0)
+            {
+                up = up.IgnoreColumns(lstIgnoreColumns.ToArray());
+            }
+            if (lstColumns != null && lstColumns.Count > 0)
+            {
+                up = up.UpdateColumns(lstColumns.ToArray());
+            }
+            if (WhereColumns!=null)
+            {
+                up = up.WhereColumns(WhereColumns);
+            }
+            return await up.ExecuteCommandHasChangeAsync();
+        }
+
         /// <summary>
         /// 根据实体删除一条数据
         /// </summary>

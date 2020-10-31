@@ -9,7 +9,10 @@ const map = {
   vendor: () => import('@/views/system/vendor/index'),
   sapInvoice: () => import('@/views/invoice/sap/index'),
   siteInvoice: () => import('@/views/invoice/site/index'),
-  matchReport: () => import('@/views/report/match-invoice/index')
+  matchReport: () => import('@/views/report/match-invoice/index'),
+  unMatchReport: () => import('@/views/report/unmatch-invoice/index'),
+  compareReport: () => import('@/views/report/compare-invoice/index'),
+  payment: () => import('@/views/report/payment/index')
 }
 
 const state = {

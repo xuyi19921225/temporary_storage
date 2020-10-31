@@ -20,6 +20,7 @@ using Swashbuckle.AspNetCore.Filters;
 using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.Repository;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FinanceInvoiceCompare.WebApi
 {
@@ -68,13 +69,21 @@ namespace FinanceInvoiceCompare.WebApi
             //注册服务，使用Scope保证每个会话的实力不同
             services.AddScoped<SqlSugar.ISqlSugarClient>(o =>
             {
-                return new SqlSugar.SqlSugarClient(new SqlSugar.ConnectionConfig()
+                SqlSugar.SqlSugarClient db= new SqlSugar.SqlSugarClient(new SqlSugar.ConnectionConfig()
                 {
                     ConnectionString = dbConfig[0].Connection,//必填, 数据库连接字符串
                     DbType = (SqlSugar.DbType)dbConfig[0].DbType,//必填, 数据库类型
                     IsAutoCloseConnection = true,//默认false, 时候知道关闭数据库连接, 设置为true无需使用using或者Close操作
                     InitKeyType = SqlSugar.InitKeyType.SystemTable//默认SystemTable, 字段信息读取, 如：该属性是不是主键，标识列等等信息
                 });
+
+                db.Aop.OnLogExecuting = (sql, pars) =>
+                {
+                    Console.WriteLine(sql + "\r\n" + db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
+                    Console.WriteLine();
+                };
+
+                return db;
             });
 
             #region 注册配置文件
@@ -96,6 +105,7 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IVendorRepository, VendorRepository>();
             services.AddScoped<ISAPRepository, SAPRepository>();
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleMenuService, RoleMenuService>();
             services.AddScoped<IRoleService, RoleService>();
@@ -106,6 +116,7 @@ namespace FinanceInvoiceCompare.WebApi
             services.AddScoped<IVendorService, VendorService>();
             services.AddScoped<ISAPService, SAPService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             #endregion
 

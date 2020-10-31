@@ -36,93 +36,93 @@
         </template>
       </el-table-column>
       <el-table-column label="VendorCode" width="100" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.vendor }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="VendorChName" width="120" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.vendorChName }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Reference" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.reference }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="CompanyCode" width="120" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.cocd }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="DocumentNo" width="120" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.documentNo }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="DocType" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.type }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Net Due Date" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.netDueDT }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Pstng Date" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.pstngDate }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="DocDate" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.docDate }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
-      <el-table-column label="Amount" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.amountInDC }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="PBK" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.pbk }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Text" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.text }}</span>
+      <el-table-column label="Amount" align="center">
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="PBK" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.pbk }}</span>
+        <template>
+          <span>#N/A</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Text" align="center">
+        <template>
+          <span>#N/A</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="PBK" align="center">
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="BlineDate" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.blineDate }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Amt. LC2" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.amtLC2 }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Assignment" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.assign }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="G/L" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.gL }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="ClrngDoc" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.clrngDoc }}</span>
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
       <el-table-column label="Check" align="center">
@@ -135,9 +135,9 @@
           <span>{{ row.dataSource }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="MatchDate" width="160" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.matchDate }}</span>
+      <el-table-column label="MatchDate" width="150" align="center">
+        <template>
+          <span>#N/A</span>
         </template>
       </el-table-column>
     </el-table>
@@ -148,12 +148,12 @@
 </template>
 
 <script>
-import { getMatchInvoiceReport } from '@/api/report'
+import { getUnMatchInvoiceReport } from '@/api/report'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'MatchInvoiceReportListTable',
+  name: 'UnMatchInvoiceReportListTable',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -177,7 +177,7 @@ export default {
     getList() {
       this.listLoading = true
       this.listQuery.list = this.$store.getters.company
-      getMatchInvoiceReport(this.listQuery).then(res => {
+      getUnMatchInvoiceReport(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false

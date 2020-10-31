@@ -2,8 +2,26 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" placeholder="发票号码" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select
+        v-model="listQuery.compare"
+        class="filter-item"
+        placeholder="请选择条件"
+        style="width: 150px;"
+        clearable
+        @change="selectInit"
+      >
+        <el-option
+          v-for="item in isMatchList"
+          :key="item.id"
+          :label="item.value"
+          :value="item.value"
+        />
+      </el-select>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
+      </el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" :loading="downloading" @click="exportExcel">
+        导出EXCEL
       </el-button>
     </div>
 
@@ -125,17 +143,17 @@
           <span>{{ row.clrngDoc }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Check" align="center">
+      <el-table-column label="Check" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.check }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Data Source" width="150" align="center">
+      <el-table-column label="Data Source" width="150" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.dataSource }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="MatchDate" width="160" align="center">
+      <el-table-column label="MatchDate" width="160" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.matchDate }}</span>
         </template>
@@ -148,16 +166,25 @@
 </template>
 
 <script>
-import { getMatchInvoiceReport } from '@/api/report'
+import { getCompareMatchInvoiceReport, getAllCompareMatchInvoiceReport } from '@/api/report'
 import waves from '@/directive/waves' // waves directive
+import { export_json_to_excel } from '@/utils/Export2Excel'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { parseTime } from '@/utils'
 
 export default {
-  name: 'MatchInvoiceReportListTable',
+  name: 'CompareInvoiceReportListTable',
   components: { Pagination },
   directives: { waves },
   data() {
     return {
+      isMatchList: [{
+        id: 1,
+        value: 'Match'
+      }, {
+        id: 2,
+        value: 'Unmatch'
+      }],
       tableKey: 0,
       list: null,
       total: 0,
@@ -165,9 +192,14 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        invoiceNumber: ''
+        invoiceNumber: '',
+        compare: ''
       },
-      uploadLoading: false
+      uploadLoading: false,
+      downloading: false,
+      filename: '发票比对信息',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   created() {
@@ -176,8 +208,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
+      console.log(this.$store.getters.company)
       this.listQuery.list = this.$store.getters.company
-      getMatchInvoiceReport(this.listQuery).then(res => {
+      getCompareMatchInvoiceReport(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false
@@ -185,12 +218,100 @@ export default {
         this.listLoading = false
       )
     },
+    exportExcel() {
+      this.downloadLoading = true
+      getAllCompareMatchInvoiceReport(this.listQuery)
+        .then(res => {
+          const tHeader = [
+            '发票号码',
+            '长别',
+            '发票金额',
+            '是否一致',
+            'VendorCode',
+            'VendorChName',
+            'Reference',
+            'CompanyCode',
+            'DocumentNo',
+            'DocType',
+            'Net Due Date',
+            'Pstng Date',
+            'Doc Date',
+            'Amount',
+            'PBk',
+            'Text',
+            'BlineDate',
+            'Amt. LC2',
+            'Assignment',
+            'G/L',
+            'ClrngDoc',
+            'Check',
+            'Data Source',
+            'Match Date'
+          ]
+          const filterVal = [
+            'invoiceNumber',
+            'companyCode',
+            'amount',
+            'isMatch',
+            'vendor',
+            'vendorChName',
+            'reference',
+            'cocd',
+            'documentNo',
+            'docType',
+            'netDueDate',
+            'pstngDate',
+            'docDate',
+            'amountInDC',
+            'pBk',
+            'text',
+            'blineDate',
+            'amtLC2',
+            'assignment',
+            'gl',
+            'clrngDoc',
+            'check',
+            'dataSource',
+            'matchDate'
+          ]
+          console.log(res)
+
+          const list = res.response
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloadLoading = false
+        }
+        ).catch(
+          this.listLoading = false
+        )
+    },
     handleFilter() {
       this.listQuery.pageindex = 1
       this.getList()
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
+    },
+    selectInit() {
+      this.handleFilter()
     }
   }
 }
+
 </script>
 
 <style lang="scss" scoped>

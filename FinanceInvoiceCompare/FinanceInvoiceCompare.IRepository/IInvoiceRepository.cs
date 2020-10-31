@@ -9,6 +9,14 @@ namespace FinanceInvoiceCompare.WebApi.IRepository
 {
     public interface IInvoiceRepository: IBaseRepository<Invoice>
     {
-        Task<PageModel<UMatchInvoiceReportViewModel>> GetMatchInvoiceRepost(MatchInvoiceReportRequestModel model);
+        Task<PageModel<UMatchInvoiceReportViewModel>> GetMatchInvoiceReport(MatchInvoiceReportRequestModel model);
+
+        Task<PageModel<UMatchInvoiceReportViewModel>> GetUnMatchInvoiceReport(MatchInvoiceReportRequestModel model);
+
+        Task<PageModel<UMatchInvoiceReportViewModel>> GetCompareMatchInvoiceReport(MatchInvoiceReportRequestModel model);
+
+        Task<List<UMatchInvoiceReportViewModel>> GetAllCompareMatchInvoiceReport(MatchInvoiceReportRequestModel model);
+
+        Task<PageModel<Payment>> GetInvoicePaymentReport(MatchInvoiceReportRequestModel model);
     }
 }

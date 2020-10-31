@@ -22,38 +22,36 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                         JoinType.Left,a1.Reference==c3.InvoiceNumber&&a1.Cocd==c3.CompanyCode&&c3.IsDelete==false
 
                })
-             .Where((a1) => a1.IsDelete == false)
-             .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (a1) => a1.Reference .Contains(model.InvoiceNumber))
-             .Select((a1, b2, c3) => new SAPInvoiceData 
-             {
-                 Id=a1.Id,
-                 Vendor=a1.Vendor,
-                 Cocd=a1.Cocd,
-                 Reference=a1.Reference,
-                 IsMatch = SqlFunc.IIF(SqlFunc.IsNull(c3.InvoiceNumber, string.Empty)!=string.Empty, "Y", "N") ,
-                 VendorChName=b2.VendorChName,
-                 DocumentNo=a1.DocumentNo,
-                 Type=a1.Type,
-                 NetDueDT=a1.NetDueDT,
-                 PstngDate=a1.PstngDate,
-                 DocDate=a1.DocDate,
-                 Curr=a1.Curr,
-                 AmountInDC=a1.AmountInDC,
-                 Remark=a1.Remark,
-                 PBk=a1.PBk,
-                 Text=a1.Text,
-                 BlineDate=a1.BlineDate,
-                 AmtLC2=a1.AmtLC2,
-                 Assign=a1.Assign,
-                 GL=a1.GL,
-                 ClrngDoc=a1.ClrngDoc
-             });
+            .Where((a1) => a1.IsDelete == false)
+            .Select((a1, b2, c3) => new SAPInvoiceData 
+            {
+                Id=a1.Id,
+                Vendor=a1.Vendor,
+                Cocd=a1.Cocd,
+                Reference=a1.Reference,
+                IsMatch = SqlFunc.IIF(SqlFunc.IsNull(c3.InvoiceNumber, string.Empty)!=string.Empty, "Y", "N") ,
+                VendorChName=b2.VendorChName,
+                DocumentNo=a1.DocumentNo,
+                Type=a1.Type,
+                NetDueDT=a1.NetDueDT,
+                PstngDate=a1.PstngDate,
+                DocDate=a1.DocDate,
+                Curr=a1.Curr,
+                AmountInDC=a1.AmountInDC,
+                Remark=a1.Remark,
+                PBk=a1.PBk,
+                Text=a1.Text,
+                BlineDate=a1.BlineDate,
+                AmtLC2=a1.AmtLC2,
+                Assign=a1.Assign,
+                GL=a1.GL,
+                ClrngDoc=a1.ClrngDoc
+            });
 
 
             var groupSapInvoice = Db.Queryable<SAPInvoiceData>()
+              .Where(it => it.IsDelete == false)
               .GroupBy(it => new { it.Reference, it.Cocd })
-              .Where((a1) => a1.IsDelete == false)
-              .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (a1) => a1.Reference.Contains(model.InvoiceNumber))
               .Select(it => new SAPInvoiceData { Cocd = it.Cocd, Reference = it.Reference, Check = SqlFunc.AggregateCount(it.Id) });
 
             RefAsync<int> totalCount = 0;
@@ -61,7 +59,9 @@ namespace FinanceInvoiceCompare.WebApi.Repository
 
             return new PageModel<SAPInvoiceData>()
             {
-                List = await Db.Queryable(allSapInvoice, groupSapInvoice, (p1, p2) => p1.Cocd == p2.Cocd && p1.Reference == p2.Reference).Select((p1,p2)=>new SAPInvoiceData 
+                List = await Db.Queryable(allSapInvoice, groupSapInvoice, (p1, p2) => p1.Cocd == p2.Cocd && p1.Reference == p2.Reference)
+                .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (p1)=> p1.Reference.Contains(model.InvoiceNumber))
+                .Select((p1,p2)=>new SAPInvoiceData 
                 {
                     Id=p1.Id,
                     Vendor = p1.Vendor,

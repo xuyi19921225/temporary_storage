@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SqlSugar;
 
 namespace FinanceInvoiceCompare.WebApi.Controllers
 {
@@ -180,11 +181,16 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Route("GetSiteInvoiceList")]
         public async Task<MessageModel<PageModel<Invoice>>> GetSiteInvoiceList([FromQuery] SiteInvoiceRequestModel model)
         {
+           var expressions= Expressionable.Create<Invoice>()
+                .And(it => it.IsDelete == false)
+                .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode==model.CompanyCode)
+                .AndIF(!string.IsNullOrEmpty(model.InvoiceNumber),it => it.InvoiceNumber.Contains(model.InvoiceNumber)).ToExpression();
+
             return new MessageModel<PageModel<Invoice>>()
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await invoiceService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
+                Response = await invoiceService.QueryPage(expressions, model.PageIndex, model.PageSize, " ID desc ")
             };
         }
 

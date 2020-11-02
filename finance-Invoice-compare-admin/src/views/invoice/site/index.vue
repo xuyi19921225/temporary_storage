@@ -6,6 +6,7 @@
         class="filter-item"
         placeholder="请选择公司编码"
         style="width: 150px;"
+        clearable
         @change="changeCompanyCode"
       >
         <el-option
@@ -15,7 +16,7 @@
           :value="item.code"
         />
       </el-select>
-      <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.invoiceNumber" placeholder="发票号码" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>

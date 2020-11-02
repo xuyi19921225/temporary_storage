@@ -3,6 +3,7 @@ using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -32,14 +33,17 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [Authorize]
-        public async Task<MessageModel<PageModel<Role>>> Get([FromQuery]RoleRequestModel model)
+        public async Task<MessageModel<PageModel<Role>>> Get([FromQuery] RoleRequestModel model)
         {
-            Expression<Func<Role, bool>> whereExpression = a => a.IsDelete == false;
+            var expressions = Expressionable.Create<Role>()
+             .And(it=>it.IsDelete==false)
+             .AndIF(!string.IsNullOrEmpty(model.RoleName), it =>  it.RoleName.Contains(model.RoleName)).ToExpression();
+
             return new MessageModel<PageModel<Role>>()
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await roleService.QueryPage(whereExpression, model.PageIndex, model.PageSize, " ID desc ")
+                Response = await roleService.QueryPage(expressions, model.PageIndex, model.PageSize, " ID desc ")
             };
         }
 
@@ -71,7 +75,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Authorize]
-        public async Task<MessageModel<string>> Post([FromBody]Role model)
+        public async Task<MessageModel<string>> Post([FromBody] Role model)
         {
             var data = new MessageModel<string>();
 
@@ -106,7 +110,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize]
-        public async Task<MessageModel<string>> Put([FromBody]Role model)
+        public async Task<MessageModel<string>> Put([FromBody] Role model)
         {
             var data = new MessageModel<string>();
 
@@ -132,7 +136,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpDelete]
         [Authorize]
-        public async Task<MessageModel<string>> Delete([FromQuery]int id)
+        public async Task<MessageModel<string>> Delete([FromQuery] int id)
         {
             var data = new MessageModel<string>();
             if (id > 0)

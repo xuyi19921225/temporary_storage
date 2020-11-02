@@ -18,5 +18,7 @@ namespace FinanceInvoiceCompare.WebApi.IRepository
         Task<List<UMatchInvoiceReportViewModel>> GetAllCompareMatchInvoiceReport(MatchInvoiceReportRequestModel model);
 
         Task<PageModel<Payment>> GetInvoicePaymentReport(MatchInvoiceReportRequestModel model);
+
+        Task<List<Payment>> GetAllInvoicePaymentReport(MatchInvoiceReportRequestModel model);
     }
 }

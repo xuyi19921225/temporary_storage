@@ -17,6 +17,9 @@
       >
         <el-button type="primary" :loading="uploadLoading" icon="el-icon-upload">批量导入</el-button>
       </el-upload>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" :loading="downloading" @click="exportExcel">
+        导出EXCEL
+      </el-button>
     </div>
 
     <el-table
@@ -119,10 +122,12 @@
 </template>
 
 <script>
-import { addPayment, getPaymentInvoiceReport } from '@/api/report'
+import { addPayment, getPaymentInvoiceReport, getAllPaymentInvoiceReport } from '@/api/report'
 import XLSX from 'xlsx'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { export_json_to_excel } from '@/utils/Export2Excel'
+import { parseTime } from '@/utils'
 
 export default {
   name: 'PatmentInvoiceReportListTable',
@@ -142,7 +147,11 @@ export default {
           return item.code
         }).join(',')
       },
-      uploadLoading: false
+      uploadLoading: false,
+      downloading: false,
+      filename: '付款发票信息',
+      autoWidth: true,
+      bookType: 'xlsx'
     }
   },
   created() {
@@ -236,8 +245,75 @@ export default {
       }
       reader.readAsArrayBuffer(file.file)
     },
+    exportExcel() {
+      this.downloadLoading = true
+      getAllPaymentInvoiceReport(this.listQuery)
+        .then(res => {
+          const tHeader = [
+            'VendorCode',
+            'VendorChName',
+            'Reference',
+            'CompantCode',
+            'DocumentNo',
+            'DocType',
+            'Net Due Date',
+            'Pstng Date',
+            'Doc Date',
+            'Currency',
+            'PBk',
+            'Amount',
+            'Match Date',
+            'Recived Status',
+            '日期判断',
+            'Block Status'
+          ]
+          const filterVal = [
+            'vendor',
+            'vendorChName',
+            'reference',
+            'cocd',
+            'documentNo',
+            'type',
+            'netDueDT',
+            'pstngDate',
+            'docDate',
+            'curr',
+            'pBk',
+            'dCAmount',
+            'matchDate',
+            'recivedStatus',
+            'day',
+            'blockStatus'
+          ]
+
+          const list = res.response
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloadLoading = false
+        }
+        ).catch(
+          this.downloadLoading = false
+        )
+    },
     onChange(file, fileList) {
       this.$refs['upload'].clearFiles()
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     },
     handleFilter() {
       this.listQuery.pageindex = 1

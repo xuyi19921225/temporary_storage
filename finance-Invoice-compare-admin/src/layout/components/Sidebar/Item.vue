@@ -18,6 +18,7 @@ export default {
 
     if (icon) {
       vnodes.push(<svg-icon icon-class={icon}/>)
+      // vnodes.push(<i size='mini' class={icon}/>)
     }
 
     if (title) {

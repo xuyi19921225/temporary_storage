@@ -276,8 +276,6 @@ export default {
             'dataSource',
             'matchDate'
           ]
-          console.log(res)
-
           const list = res.response
           const data = this.formatJson(filterVal, list)
           export_json_to_excel({
@@ -290,7 +288,7 @@ export default {
           this.downloadLoading = false
         }
         ).catch(
-          this.listLoading = false
+          this.downloadLoading = false
         )
     },
     handleFilter() {

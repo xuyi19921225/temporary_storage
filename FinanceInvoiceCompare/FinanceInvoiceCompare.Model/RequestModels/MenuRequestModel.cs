@@ -2,6 +2,6 @@
 {
     public class MenuRequestModel:PageEntity
     {
-        public string MenuName { get; set; }
+        public string Title { get; set; }
     }
 }

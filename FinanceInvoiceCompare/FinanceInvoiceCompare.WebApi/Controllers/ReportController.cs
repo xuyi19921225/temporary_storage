@@ -151,8 +151,25 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             };
         }
 
-        
 
+
+        /// <summary>
+        /// 获取所有付款发票信息
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetAllPaymentInvoiceReport")]
+        public async Task<MessageModel<List<Payment>>> GetAllPaymentInvoiceReport([FromQuery] MatchInvoiceReportRequestModel model)
+        {
+            return new MessageModel<List<Payment>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await invoiceService.GetAllInvoicePaymentReport(model)
+            };
+        }
 
     }
 }

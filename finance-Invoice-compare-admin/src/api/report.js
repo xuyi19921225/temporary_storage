@@ -40,6 +40,14 @@ export function getPaymentInvoiceReport(params) {
   })
 }
 
+export function getAllPaymentInvoiceReport(params) {
+  return request({
+    url: '/report/getAllPaymentInvoiceReport',
+    method: 'get',
+    params
+  })
+}
+
 export function addPayment(data) {
   return request({
     url: '/report',

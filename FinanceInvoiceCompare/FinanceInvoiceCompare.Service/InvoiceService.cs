@@ -66,5 +66,16 @@ namespace FinanceInvoiceCompare.WebApi.Service
         {
            return  await invoiceRepository.GetInvoicePaymentReport(model);
         }
+
+
+        /// <summary>
+        /// 获取所有付款发票信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<List<Payment>> GetAllInvoicePaymentReport(MatchInvoiceReportRequestModel model) 
+        {
+            return await invoiceRepository.GetAllInvoicePaymentReport(model);
+        }
     }
 }

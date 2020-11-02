@@ -6,6 +6,7 @@ using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
 
 namespace FinanceInvoiceCompare.WebApi.Controllers
 {
@@ -33,11 +34,14 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Authorize]
         public async Task<MessageModel<PageModel<Company>>> Get([FromQuery] CompanyRequestModel model)
         {
+            var expressions = Expressionable.Create<Company>()
+             .And(it => it.IsDelete == false)
+             .AndIF(!string.IsNullOrEmpty(model.Value), it => it.Code.Contains(model.Value) || it.CompanyName.Contains(model.Value)).ToExpression();
             return new MessageModel<PageModel<Company>>()
             {
                 Message = "获取信息成功",
                 Success = true,
-                Response = await companyService.QueryPage(a => a.IsDelete == false, model.PageIndex, model.PageSize, " ID desc ")
+                Response = await companyService.QueryPage(expressions, model.PageIndex, model.PageSize, " ID desc ")
             };
         }
 

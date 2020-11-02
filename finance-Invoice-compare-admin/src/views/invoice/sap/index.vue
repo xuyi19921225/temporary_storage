@@ -35,27 +35,27 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorCode" align="center">
+      <el-table-column label="VendorCode" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" align="center">
+      <el-table-column label="VendorChName" width="250" align="center">
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Reference" align="center">
+      <el-table-column label="Reference" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.reference }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="CompanyCode" align="center">
+      <el-table-column label="CompanyCode" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cocd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="DocumentNo" align="center">
+      <el-table-column label="DocumentNo" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.documentNo }}</span>
         </template>
@@ -65,17 +65,17 @@
           <span>{{ row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Net Due Date" align="center">
+      <el-table-column label="Net Due Date" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.netDueDT }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Pstng Date" align="center">
+      <el-table-column label="Pstng Date" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.pstngDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="DocDate" align="center">
+      <el-table-column label="DocDate" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.docDate }}</span>
         </template>
@@ -124,7 +124,6 @@ export default {
   directives: { waves },
   data() {
     return {
-
       path: process.env.BASE_URL,
       tableKey: 0,
       list: null,

@@ -54,7 +54,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [HttpGet]
         [Authorize]
         [Route("GetUnMatchInvoiceReport")]
-        public async Task<MessageModel<PageModel<UMatchInvoiceReportViewModel>>> GetUnMatchInvoiceReport([FromQuery] MatchInvoiceReportRequestModel model)
+        public async Task<MessageModel<PageModel<UMatchInvoiceReportViewModel>>> GetUnMatchInvoiceReport([FromQuery]MatchInvoiceReportRequestModel model)
         {
             return new MessageModel<PageModel<UMatchInvoiceReportViewModel>>()
             {
@@ -131,6 +131,27 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
             return data;
         }
+
+
+        /// <summary>
+        /// 获取付款发票信息
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetPaymentInvoiceReport")]
+        public async Task<MessageModel<PageModel<Payment>>> GetPaymentInvoiceReport([FromQuery] MatchInvoiceReportRequestModel model)
+        {
+            return new MessageModel<PageModel<Payment>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await invoiceService.GetInvoicePaymentReport(model)
+            };
+        }
+
+        
 
 
     }

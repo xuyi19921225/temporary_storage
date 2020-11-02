@@ -40,17 +40,12 @@
       </el-table-column>
       <el-table-column label="CompanyCode" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.companyCode }}</span>
+          <span>{{ row.code }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorCode" align="center">
+      <el-table-column label="CompanyName" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.vendorCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="VendorChName" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.vendorChName }}</span>
+          <span>{{ row.companyName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Actions" align="center" width="250px" class-name="small-padding fixed-width">
@@ -69,14 +64,11 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑供应商':'新增供应商'">
       <el-form ref="dataForm" :model="dialogData" label-width="140px" label-position="left" :rules="rules">
-        <el-form-item label="CompanyCode" prop="companyCode">
-          <el-input v-model="dialogData.companyCode" :disabled="dialogType==='edit'?true:false" />
+        <el-form-item label="CompanyCode" prop="code">
+          <el-input v-model="dialogData.code" :disabled="dialogType==='edit'?true:false" />
         </el-form-item>
-        <el-form-item label="VendorCode" prop="vendorCode">
-          <el-input v-model="dialogData.vendorCode" :disabled="dialogType==='edit'?true:false" />
-        </el-form-item>
-        <el-form-item label="VendorChName" prop="vendorChName">
-          <el-input v-model="dialogData.vendorChName" />
+        <el-form-item label="CompanyName" prop="companyName">
+          <el-input v-model="dialogData.companyName" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
@@ -88,18 +80,17 @@
 </template>
 
 <script>
-import { addVendor, saveVendor, getVendorList, deleteVendor } from '@/api/vendor'
+import { addCompany, saveCompany, getCompanyList, deleteCompany } from '@/api/company'
 import XLSX from 'xlsx'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: 'VendorListTable',
+  name: 'CompanyListTable',
   components: { Pagination },
   directives: { waves },
   data() {
     return {
-
       path: process.env.BASE_URL,
       tableKey: 0,
       list: null,
@@ -114,14 +105,12 @@ export default {
       dialogVisible: false,
       dialogType: '',
       dialogData: {
-        companyCode: '',
-        vendorCode: '',
-        vendorChName: ''
+        code: '',
+        companyName: ''
       },
       rules: {
-        vendorCode: [{ required: true, message: '供应商编码是必填项', trigger: 'blur' }],
-        vendorChName: [{ required: true, message: '供应商名称是必填项', trigger: 'blur' }],
-        companyCode: [{ required: true, message: '公司Code是必填项', trigger: 'blur' }]
+        companyName: [{ required: true, message: '公司名称是必填项', trigger: 'blur' }],
+        code: [{ required: true, message: '公司Code是必填项', trigger: 'blur' }]
       }
     }
   },
@@ -131,7 +120,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getVendorList(this.listQuery).then(res => {
+      getCompanyList(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false
@@ -158,22 +147,22 @@ export default {
           type: 'binary'
         })
 
-        outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[1]], {
+        outdata = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
           defval: ''
         })
 
         if (outdata.length > 0) {
-          const vendors = []
+          const companys = []
           outdata.forEach((value, index, arr) => {
-            vendors.push({
-              companyCode: value.公司代码,
-              vendorCode: value.Vendor,
+            companys.push({
               // eslint-disable-next-line no-eval
-              vendorChName: eval('value["Acct holder"]'),
+              code: eval('value["company code "]'),
+              // eslint-disable-next-line no-eval
+              companyName: eval('value["long Name"]'),
               createBy: this.$store.getters.userID
             })
           })
-          addVendor(vendors)
+          addCompany(companys)
             .then(res => {
               this.uploadLoading = false
               if (res.success === true) {
@@ -208,9 +197,9 @@ export default {
     onChange(file, fileList) {
       this.$refs['upload'].clearFiles()
     },
-    addVendor() {
+    addCompany() {
       this.dialogData.createBy = this.$store.getters.userID
-      addVendor([this.dialogData]).then(res => {
+      addCompany([this.dialogData]).then(res => {
         if (res.success === true) {
           this.$message({
             message: '添加成功',
@@ -223,9 +212,9 @@ export default {
         }
       })
     },
-    saveVendor() {
+    saveCompany() {
       this.dialogData.updatedBy = this.$store.getters.userID
-      saveVendor(this.dialogData).then(res => {
+      saveCompany(this.dialogData).then(res => {
         if (res.success === true) {
           this.$message({
             message: '更新成功',
@@ -238,8 +227,8 @@ export default {
         }
       })
     },
-    deleteVendor(id) {
-      deleteVendor({ id: id }).then(res => {
+    deleteCompany(id) {
+      deleteCompany({ id: id }).then(res => {
         if (res.success === true) {
           this.$notify({
             title: 'Success',
@@ -261,9 +250,9 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           if (this.dialogType === 'add') {
-            this.addVendor()
+            this.addCompany()
           } else {
-            this.saveVendor()
+            this.saveCompany()
           }
         }
       })
@@ -288,20 +277,18 @@ export default {
         this.$refs['dataForm'].resetFields()
         this.dialogData = {
           id: row.id,
-          companyCode: row.companyCode,
-          vendorCode: row.vendorCode,
-          vendorChName: row.vendorChName
+          code: row.code,
+          companyName: row.companyName
         }
       })
     },
     handleDelete(row, index) {
-      this.deleteVendor(row.id)
+      this.deleteCompany(row.id)
     },
     defaultValue() {
       this.dialogData = {
-        companyCode: '',
-        vendorCode: '',
-        vendorChName: ''
+        code: '',
+        companyName: ''
       }
     }
   }

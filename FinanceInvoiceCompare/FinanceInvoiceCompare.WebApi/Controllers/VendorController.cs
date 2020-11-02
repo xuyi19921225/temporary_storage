@@ -109,5 +109,35 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             return data;
         }
 
+
+        /// <summary>
+        /// 删除一个供应商
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Authorize]
+        public async Task<MessageModel<string>> Delete([FromQuery] int id)
+        {
+            var data = new MessageModel<string>();
+            if (id > 0)
+            {
+                var vendorDetail = await vendorService.QueryById(id);
+                vendorDetail.IsDelete = true;
+
+                var flag = data.Success = await vendorService.Update(vendorDetail);
+
+                if (flag)
+                {
+                    data.Message = "删除成功";
+                }
+                else
+                {
+                    data.Message = "删除失败";
+                }
+
+            }
+            return data;
+        }
     }
 }

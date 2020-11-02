@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FinanceInvoiceCompare.Common\FinanceInvoiceCompare.WebApi.Common.csproj" />
     <ProjectReference Include="..\FinanceInvoiceCompare.IRepository\FinanceInvoiceCompare.WebApi.IRepository.csproj" />
   </ItemGroup>
 

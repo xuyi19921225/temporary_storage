@@ -165,7 +165,14 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        invoiceNumber: ''
+        invoiceNumber: '',
+        multipleCompany: this.$store.getters.company.map(item => {
+          return item.code
+        }).join(',')
+
+        // this.$store.getters.company.map(item => {
+        //   return item.code
+        // })
       },
       uploadLoading: false
     }
@@ -176,7 +183,6 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      this.listQuery.list = this.$store.getters.company
       getUnMatchInvoiceReport(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount

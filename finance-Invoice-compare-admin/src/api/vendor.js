@@ -24,3 +24,11 @@ export function saveVendor(data) {
   })
 }
 
+export function deleteVendor(params) {
+  return request({
+    url: '/vendor',
+    method: 'delete',
+    params
+  })
+}
+

@@ -27,32 +27,12 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="发票号码" width="160" align="center" fixed>
-        <template slot-scope="{row}">
-          <span>{{ row.invoiceNumber }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="厂别" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.companyCode }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="发票金额" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.amount }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="是否一致" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.isMatch }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="VendorCode" width="100" align="center">
+      <el-table-column label="VendorCode" width="160" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="120" align="center">
+      <el-table-column label="VendorChName" width="200" align="center">
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
@@ -62,17 +42,17 @@
           <span>{{ row.reference }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="CompanyCode" width="120" align="center">
+      <el-table-column label="CompanyCode" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.cocd }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="DocumentNo" width="120" align="center">
+      <el-table-column label="DocumentNo" width="100" align="center">
         <template slot-scope="{row}">
           <span>{{ row.documentNo }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="DocType" align="center">
+      <el-table-column label="DocType" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.type }}</span>
         </template>
@@ -92,64 +72,43 @@
           <span>{{ row.docDate }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="Currency" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.curr }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="PBK" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.pbk }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="Amount" width="150" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.amountInDC }}</span>
+          <span>{{ row.dCAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="PBK" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.pbk }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Text" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.text }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="PBK" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.pbk }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="BlineDate" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.blineDate }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Amt. LC2" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.amtLC2 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Assignment" width="150" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.assign }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="G/L" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.gL }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="ClrngDoc" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.clrngDoc }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Check" align="center" fixed>
-        <template slot-scope="{row}">
-          <span>{{ row.check }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Data Source" width="150" align="center" fixed>
-        <template slot-scope="{row}">
-          <span>{{ row.dataSource }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="MatchDate" width="160" align="center" fixed>
+      <el-table-column label="Match Date" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.matchDate }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Received Status"
+        width="150"
+        align="center"
+      >
+        <template slot-scope="{row}">
+          <span>{{ row.recivedStatus }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="日期判断" width="160" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.day }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="Block status" width="160" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.blockStatus }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +119,7 @@
 </template>
 
 <script>
-import { addPayment, getCompareMatchInvoiceReport } from '@/api/report'
+import { addPayment, getPaymentInvoiceReport } from '@/api/report'
 import XLSX from 'xlsx'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -178,7 +137,10 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        invoiceNumber: ''
+        invoiceNumber: '',
+        multipleCompany: this.$store.getters.company.map(item => {
+          return item.code
+        }).join(',')
       },
       uploadLoading: false
     }
@@ -189,9 +151,8 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.log(this.$store.getters.company)
       this.listQuery.list = this.$store.getters.company
-      getCompareMatchInvoiceReport(this.listQuery).then(res => {
+      getPaymentInvoiceReport(this.listQuery).then(res => {
         this.list = res.response.list
         this.total = res.response.totalCount
         this.listLoading = false

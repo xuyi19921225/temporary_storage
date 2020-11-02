@@ -9,6 +9,34 @@
             公司操作
             </summary>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.Get(FinanceInvoiceCompare.WebApi.Model.CompanyRequestModel)">
+            <summary>
+            获取公司信息(分页)
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.Post(System.Collections.Generic.List{FinanceInvoiceCompare.WebApi.Model.Company})">
+            <summary>
+            添加公司信息
+            </summary>
+            <param name="companys">公司信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.Put(FinanceInvoiceCompare.WebApi.Model.Company)">
+            <summary>
+            更新一个公司
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.Delete(System.Int32)">
+            <summary>
+            删除一个公司
+            </summary>
+            <param name="id">id</param>
+            <returns></returns>
+        </member>
         <member name="M:FinanceInvoiceCompare.WebApi.Controllers.CompanyController.GetAllCompanyList">
             <summary>
             获取所有公司信息
@@ -157,6 +185,13 @@
             <param name="payments">付款信息</param>
             <returns></returns>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetPaymentInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取付款发票信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleController">
             <summary>
             角色逻辑
@@ -299,6 +334,13 @@
             更新一个供应商
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.VendorController.Delete(System.Int32)">
+            <summary>
+            删除一个供应商
+            </summary>
+            <param name="id">id</param>
             <returns></returns>
         </member>
     </members>

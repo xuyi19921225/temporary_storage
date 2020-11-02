@@ -10,9 +10,9 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public string InvoiceNumber { get; set; }
 
         public string Compare { get; set; }
-        public List<Company> List { get; set; }
+        public string MultipleCompany{ get; set; }
 
-        public string[] CompanyCodeList => List.Select(x => x.Code).ToArray();
+        public string[] CompanyCodeList => MultipleCompany?.Split(",");
 
     }
 }

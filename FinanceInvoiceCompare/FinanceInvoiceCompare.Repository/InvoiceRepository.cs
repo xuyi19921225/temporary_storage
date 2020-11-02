@@ -1,4 +1,5 @@
-﻿using FinanceInvoiceCompare.WebApi.IRepository;
+﻿using FinanceInvoiceCompare.WebApi.Common;
+using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Repository.Base;
 using SqlSugar;
@@ -417,6 +418,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository
         {
 
 
+
             var mainInvoice = Db.Queryable<Payment, Vendor>((a1, b2) => new object[]
                 {
                         JoinType.Left,a1.Vendor==b2.VendorCode&&b2.IsDelete==false
@@ -430,6 +432,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                   Vendor = a1.Vendor,
                   VendorChName = b2.VendorChName,
                   DocumentNo = a1.DocumentNo,
+                  DCAmount=a1.DCAmount,
                   Type = a1.Type,
                   NetDueDT = a1.NetDueDT,
                   PstngDate = a1.PstngDate,
@@ -438,19 +441,28 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                   PBk = a1.PBk
               });
 
-            var allInvoice = Db.Queryable<Invoice>()
-            .Where((c1) => c1.IsDelete == false)
-            .Select<Invoice>();
+            var allInvoice = Db.Queryable<Invoice, SAPInvoiceData>((a1, a2) => new object[]
+                {
+                        JoinType.Left,a1.InvoiceNumber==a2.Reference&&a1.CompanyCode==a2.Cocd&&a1.IsDelete==false&&a2.IsDelete==false
+
+                })
+            .Select((a1, a2) => new Invoice
+            {
+                InvoiceNumber = a1.InvoiceNumber,
+                CompanyCode = a1.CompanyCode,
+                MatchDate=a1.MatchDate,
+                IsMatch = SqlFunc.IIF(string.IsNullOrEmpty(a2.Cocd),"N","Y")
+            }).Distinct();
 
 
             RefAsync<int> totalCount = 0;
 
 
-            return new PageModel<UMatchInvoiceReportViewModel>()
+            return new PageModel<Payment>()
             {
                 List = await Db.Queryable(mainInvoice, allInvoice, JoinType.Left, (p1, p2) => p1.Cocd == p2.CompanyCode && p1.Reference == p2.InvoiceNumber)
                   .WhereIF(model.CompanyCodeList.Length > 0, (p1) => SqlFunc.ContainsArray(model.CompanyCodeList, p1.Cocd))
-                  .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (p1) => p1.Cocd.Contains(model.InvoiceNumber))
+                  .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (p1) => p1.Reference.Contains(model.InvoiceNumber))
                   .Select((p1, p2) => new Payment
                   {
                       Cocd = p1.Cocd,
@@ -462,17 +474,19 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                       NetDueDT = p1.NetDueDT,
                       PstngDate = p1.PstngDate,
                       DocDate = p1.DocDate,
+                      DCAmount=p1.DCAmount,
                       Curr = p1.Curr,
                       PBk = p1.PBk,
                       MatchDate = p2.MatchDate,
-                      RecivedStatus = "Y",
-                      Day = SqlFunc.IIF(p2.MatchDate >= p1.PstngDate, p2.MatchDate - p1.DocDate, p1.PstngDate - p1.DocDate),
-                      BlockStatus = string.Empty
+                      RecivedStatus = p2.IsMatch,
+                      Day = SqlFunc.IIF(string.IsNullOrEmpty(p2.InvoiceNumber), default(int?), SqlFunc.IIF(p2.MatchDate >= p1.PstngDate, CustomSqlFunc.DateDiff(p1.DocDate, p2.MatchDate), CustomSqlFunc.DateDiff(p1.DocDate, p1.PstngDate))),
+                      BlockStatus = SqlFunc.IIF(string.IsNullOrEmpty(p2.InvoiceNumber),null,SqlFunc.IIF(SqlFunc.IIF(p2.MatchDate >= p1.PstngDate, CustomSqlFunc.DateDiff(p1.DocDate, p2.MatchDate), CustomSqlFunc.DateDiff(p1.DocDate, p1.PstngDate)) >= 15,"Block", "Payment"))
                   })
                   .ToPageListAsync(model.PageIndex, model.PageSize, totalCount),
                   TotalCount = totalCount
             };
         }
+
 
     }
 }

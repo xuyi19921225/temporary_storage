@@ -56,7 +56,7 @@
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleAuthorize(row)">
             授权公司
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" icon="el-icon-delete" type="danger" @click="handleDelete(row,$index)">
+          <el-button v-if="isDelete(row)" size="mini" icon="el-icon-delete" type="danger" @click="handleDelete(row,$index)">
             删除
           </el-button>
         </template>
@@ -182,10 +182,16 @@ export default {
       }
     }
   },
+  // computed: {
+  //   isDelete() { return this.$store.getters.userID < 0 }
+  // },
   created() {
     this.getList()
   },
   methods: {
+    isDelete(row) {
+      return row.id !== this.$store.getters.userID
+    },
     getList() {
       this.listLoading = true
       getUserList(this.listQuery).then(res => {

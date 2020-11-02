@@ -2,6 +2,8 @@
 {
     public class Vendor:RootEntity
     {
+        public string CompanyCode { get; set; }
+
         public string VendorCode { get; set; }
 
         public string VendorChName { get; set; }

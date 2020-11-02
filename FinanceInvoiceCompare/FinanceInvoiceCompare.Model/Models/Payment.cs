@@ -41,7 +41,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public bool IsDelete { get; set; } = false;
 
         [SugarColumn(IsIgnore =true, SerializeDateTimeFormat = "yyyy-MM-dd")]
-         public DateTime MatchDate { get; set; }
+         public DateTime? MatchDate { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         public string RecivedStatus { get; set; }
@@ -50,7 +50,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public string VendorChName { get; set; }
 
         [SugarColumn(IsIgnore = true)]
-        public int Day { get; set; }
+        public int? Day { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         public string BlockStatus { get; set; }

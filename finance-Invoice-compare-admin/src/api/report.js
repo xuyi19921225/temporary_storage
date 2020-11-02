@@ -32,6 +32,14 @@ export function getAllCompareMatchInvoiceReport(params) {
   })
 }
 
+export function getPaymentInvoiceReport(params) {
+  return request({
+    url: '/report/getPaymentInvoiceReport',
+    method: 'get',
+    params
+  })
+}
+
 export function addPayment(data) {
   return request({
     url: '/report',

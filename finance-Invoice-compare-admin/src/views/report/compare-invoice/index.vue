@@ -58,7 +58,7 @@
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="120" align="center">
+      <el-table-column label="VendorChName" width="200" align="center">
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
@@ -193,7 +193,10 @@ export default {
         pageindex: 1,
         pagesize: 20,
         invoiceNumber: '',
-        compare: ''
+        compare: '',
+        multipleCompany: this.$store.getters.company.map(item => {
+          return item.code
+        }).join(',')
       },
       uploadLoading: false,
       downloading: false,
@@ -208,7 +211,6 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      console.log(this.$store.getters.company)
       this.listQuery.list = this.$store.getters.company
       getCompareMatchInvoiceReport(this.listQuery).then(res => {
         this.list = res.response.list

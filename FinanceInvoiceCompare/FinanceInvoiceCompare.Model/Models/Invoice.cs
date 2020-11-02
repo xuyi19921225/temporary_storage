@@ -17,7 +17,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string DataSource { get; set; }
 
-        public DateTime MatchDate { get; set; }
+        public DateTime? MatchDate { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         public string IsMatch { get; set; }

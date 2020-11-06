@@ -17,11 +17,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
         {
             return await Db.Queryable<Role, RoleMenuMapping, Menu>((a1, b2, c3) => new object[]
            {
-                    JoinType.Left,a1.Id==b2.RoleID,
-                    JoinType.Left,b2.MenuID==c3.Id
+                    JoinType.Inner,a1.Id==b2.RoleID,
+                    JoinType.Inner,b2.MenuID==c3.Id
 
            })
-           .Where((a1, b2, c3) => c3.IsDelete == false)
+           .Where((a1, b2, c3) =>a1.IsDelete== false && c3.IsDelete == false)
            .Select((a1, b2, c3) => new Menu
            {
                Id = c3.Id,

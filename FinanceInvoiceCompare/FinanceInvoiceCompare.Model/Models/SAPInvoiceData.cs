@@ -46,7 +46,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool IsDelete { get; set; }
 
-        public string Remark { get; set; } = string.Empty;
+        public string Remark { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         public string VendorChName { get; set; }

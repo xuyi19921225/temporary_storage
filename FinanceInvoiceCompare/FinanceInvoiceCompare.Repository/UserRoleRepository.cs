@@ -14,6 +14,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
 
         }
 
+        /// <summary>
+        /// 查询用户信息（分页）
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<PageModel<UserRoleViewModel>> UserRoleMaps(UserRequestModel model)
         {
             int totolcount = 0;
@@ -21,11 +26,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
             List<UserRoleViewModel> list = await Task.Run(() => Db.Queryable<User, UserRoleMapping, Role>((a1, a2, a3) => new object[]
             {
                 JoinType.Left,a1.Id==a2.UserID,
-                JoinType.Left,a2.RoleID==a3.Id
+                JoinType.Left,a2.RoleID==a3.Id&&a3.IsDelete==false
 
             })
-             .WhereIF(model.NTID != null, (a1, a2, a3) => a1.NTID .Contains(model.NTID))
-             .Where((a1)=>a1.IsDelete==false)
+             .Where((a1)=> a1.IsDelete == false)
+             .WhereIF(model.NTID != null, (a1, a2, a3) =>a1.NTID .Contains(model.NTID))
              .Select((a1, a2, a3) => new UserRoleViewModel
              {
                  Id = a1.Id,

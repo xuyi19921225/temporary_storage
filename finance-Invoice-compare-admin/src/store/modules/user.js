@@ -100,6 +100,7 @@ const actions = {
 
   getMenu({ commit, state }) {
     return new Promise((resolve, reject) => {
+      // if (state.roleID && state.roleID > 0) {
       getTreeMenus({ roleId: state.roleID }).then(res => {
         try {
           if (res.success === true) {
@@ -115,6 +116,10 @@ const actions = {
       }).catch(error => {
         reject(error)
       })
+      // } else {
+      //   commit('SET_ASYNCROUTES', [])
+      //   resolve([])
+      // }
     })
   },
 

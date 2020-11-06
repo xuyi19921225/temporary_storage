@@ -29,9 +29,12 @@ namespace FinanceInvoiceCompare.WebApi.Service
         {
             var sysUserInfo = await _dal.GetSysUserInfo(ntid);
 
-            List<Company> companyList=await companyRepository.GetCompanyCode(sysUserInfo.UserID);
+            if (sysUserInfo != null)
+            {
+                List<Company> companyList = await companyRepository.GetCompanyCode(sysUserInfo.UserID);
 
-            sysUserInfo.Company = companyList;
+                sysUserInfo.Company = companyList;
+            }
 
             return sysUserInfo;
         }

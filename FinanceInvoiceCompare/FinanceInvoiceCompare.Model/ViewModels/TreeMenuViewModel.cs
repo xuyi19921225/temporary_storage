@@ -24,7 +24,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool Hidden { get; set; }
 
-        public bool IsDelete { get; set; } = false;
+        public bool IsDelete { get; set; }
         public List<Menu> Children { get; set; }
     }
 }

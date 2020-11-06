@@ -29,18 +29,19 @@
       :header-cell-style="{background:'#eef1f6',color:'#606266'}"
       fit
       highlight-current-row
+      :cell-style="setCellColor"
     >
       <el-table-column label="VendorCode" width="160" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="200" align="center">
+      <el-table-column label="VendorChName" width="200" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Reference" align="center">
+      <el-table-column label="Reference" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.reference }}</span>
         </template>
@@ -75,19 +76,19 @@
           <span>{{ row.docDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Currency" align="center">
+      <el-table-column label="Currency" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.curr }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="PBK" align="center">
+      <el-table-column label="PBK" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.pbk }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Amount" width="150" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.dCAmount }}</span>
+          <span>{{ row.dcAmount }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Match Date" width="150" align="center">
@@ -138,7 +139,7 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
-      listLoading: true,
+      listLoading: false,
       listQuery: {
         pageindex: 1,
         pagesize: 20,
@@ -159,15 +160,19 @@ export default {
   },
   methods: {
     getList() {
-      this.listLoading = true
-      this.listQuery.list = this.$store.getters.company
-      getPaymentInvoiceReport(this.listQuery).then(res => {
-        this.list = res.response.list
-        this.total = res.response.totalCount
-        this.listLoading = false
-      }).catch(
-        this.listLoading = false
-      )
+      if (this.$store.getters.company && this.$store.getters.company.length > 0) {
+        this.listLoading = true
+        this.listQuery.list = this.$store.getters.company
+        getPaymentInvoiceReport(this.listQuery).then(res => {
+          this.list = res.response.list
+          this.total = res.response.totalCount
+          this.listLoading = false
+        }).catch(
+          this.listLoading = false
+        )
+      } else {
+        this.$message.warning('未授权公司，无法查看相应公司的报表信息')
+      }
     },
     upload(file) {
       this.uploadLoading = true
@@ -321,6 +326,11 @@ export default {
     },
     selectInit() {
       this.handleFilter()
+    },
+    setCellColor({ row, column, rowIndex, columnIndex }) {
+      if (['VendorCode', 'VendorChName'].includes(column.label)) {
+        return 'background-color:#98c3e4;'
+      }
     }
   }
 }

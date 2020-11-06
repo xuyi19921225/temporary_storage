@@ -17,11 +17,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
         {
             return await Db.Queryable<User, UserRoleMapping, Role>((a1, b2, c3) => new object[]
             {
-                        JoinType.Left,a1.Id==b2.UserID,
-                        JoinType.Left,b2.RoleID==c3.Id
+                        JoinType.Left,a1.Id==b2.UserID ,
+                        JoinType.Left,b2.RoleID==c3.Id && c3.IsDelete == false
 
             })
-            .Where((a1, b2, c3) => a1.NTID == ntid && a1.IsDelete == false && c3.IsDelete == false)
+            .Where((a1, b2, c3) => a1.NTID == ntid && a1.IsDelete == false )
             .Select<sysUserInfo>()
             .FirstAsync();
         }

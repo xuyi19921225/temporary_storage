@@ -147,7 +147,7 @@ export default {
     },
     getTreeMenus(roleId) {
       this.$refs.tree.setCheckedKeys([])
-      getTreeMenus().then(res => {
+      getTreeMenus({ roleId: -1 }).then(res => {
         this.menuList = res.response
         getRMenuByRoleId({ roleId: roleId }).then(res => {
           this.$refs.tree.setCheckedKeys(res.response)

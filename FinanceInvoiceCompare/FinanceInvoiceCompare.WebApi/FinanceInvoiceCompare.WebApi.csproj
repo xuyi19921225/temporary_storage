@@ -8,6 +8,10 @@
     <DocumentationFile>C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\FinanceInvoiceCompare.WebApi.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>C:\D\VisiualGit\FinanceInvoiceCompare\FinanceInvoiceCompare.WebApi\FinanceInvoiceCompare.WebApi.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.8" />

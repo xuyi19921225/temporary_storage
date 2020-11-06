@@ -21,7 +21,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <summary>
         /// 构造函数
         /// </summary>
-        public LoginController(IJwtSerivce jwtFactory, ILDAPService ladpUtility,IUserService userService)
+        public LoginController(IJwtSerivce jwtFactory, ILDAPService ladpUtility, IUserService userService)
         {
             _jwtFactory = jwtFactory;
             _ladpUtility = ladpUtility;
@@ -39,9 +39,9 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         {
             //_ladpUtility.ValidADUser(model)
             //// 验证AD 账号
-            if (true)
+            if (_ladpUtility.ValidADUser(model))
             {
-                var user = await userService.Query(x => x.NTID == model.NTID&&x.IsActive==true);
+                var user = await userService.Query(x => x.NTID == model.NTID && x.IsActive == true && x.IsDelete == false);
 
                 if (user.Count > 0)
                 {
@@ -52,7 +52,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                         Response = await _jwtFactory.GenerateToken(model)
                     };
                 }
-                else 
+                else
                 {
                     return new MessageModel<string>()
                     {

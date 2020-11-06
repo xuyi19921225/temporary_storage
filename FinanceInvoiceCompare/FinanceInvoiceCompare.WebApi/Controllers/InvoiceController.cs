@@ -95,9 +95,9 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [HttpPost]
         [Authorize]
         [Route("AddSiteInvoice")]
-        public async Task<MessageModel<string>> AddSiteInvoice([FromBody] List<Invoice> invoices)
+        public async Task<MessageModel<int>> AddSiteInvoice([FromBody] List<Invoice> invoices)
         {
-            var data = new MessageModel<string>();
+            var data = new MessageModel<int>();
             try
             {
                 unitOfWork.BeginTran();
@@ -129,6 +129,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                         //// 添加发票信息
                         bool flag = await invoiceService.Add(invoices) > 0;
 
+
                         //// 查询上传的发票相匹配的SAP发票的List
                         var matchList = (await sAPService.Query(x => x.IsDelete == false && invoiceNumbers.Contains(x.Reference) && companyCodes.Contains(x.Cocd))).Select(x=>new {x.Reference,x.Cocd }).Distinct().ToList();
 
@@ -146,18 +147,21 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                         }
                         else 
                         {
+                           
                             data.Success = flag;
                         }
 
                 
                         if (flag)
                         {
+                            ////记录导入数量
+                            data.Response = invoices.Count;
                             data.Message = "添加成功";
                         }
                         else
                         {
-                            unitOfWork.RollbackTran();
                             data.Message = "添加失败";
+                            unitOfWork.RollbackTran();
                         }
                     }
                 }
@@ -208,7 +212,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         {
             var data = new MessageModel<string>();
 
-            var flag = data.Success = await invoiceService.Update(model);
+            var flag = data.Success = await invoiceService.Update(model,new List<string>() {"InvoiceNumber", "InvoiceDate", "InvoiceDate", "Amount", "UpdatedBy", "UpdatedAt" });
             if (flag)
             {
                 data.Message = "更新成功";

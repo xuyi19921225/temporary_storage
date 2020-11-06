@@ -24,7 +24,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly ILogger<UserCompanyController> logger;
 
-        public RoleMenuController(IRoleMenuService roleMenuService, IMenuService menuService,IUnitOfWork unitOfWork, ILogger<UserCompanyController> logger)
+        public RoleMenuController(IRoleMenuService roleMenuService, IMenuService menuService, IUnitOfWork unitOfWork, ILogger<UserCompanyController> logger)
         {
             this.roleMenuService = roleMenuService;
             this.menuService = menuService;
@@ -45,7 +45,9 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
             List<Menu> parentMenus;
 
-            if (roleID > 0)
+
+
+            if (roleID >= 0)
             {
                 ////获取父级菜单
                 parentMenus = (await roleMenuService.GetRMenuList()).Where(x => x.ParentID == -1 && x.RId == roleID).ToList();
@@ -60,7 +62,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             {
                 var treeModel = new Menu();
                 List<Menu> childrenMenus;
-                if (roleID > 0)
+                if (roleID >= 0)
                 {
                     ////获取二级菜单
                     childrenMenus = (await roleMenuService.GetRMenuList()).Where(x => x.ParentID == item.Id && x.RId == roleID).ToList();

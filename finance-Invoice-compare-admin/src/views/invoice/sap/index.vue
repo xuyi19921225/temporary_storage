@@ -18,7 +18,7 @@
         <el-button type="primary" :loading="uploadLoading" icon="el-icon-upload">批量导入</el-button>
       </el-upload>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download">
-        <a :href="`${path}SAP scan_template.xlsx`" download="SAP scan_template.xlsx">模板下载</a>
+        <a :href="`${path}SAP scan file1.xls`" download="SAP scan file1.xls">模板下载</a>
       </el-button>
     </div>
 
@@ -103,6 +103,11 @@
       <el-table-column label="Remark" align="center">
         <template slot-scope="{row}">
           <span>{{ row.remark }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="数据导入时间" width="200" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.createAt }}</span>
         </template>
       </el-table-column>
     </el-table>

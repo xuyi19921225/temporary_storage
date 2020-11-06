@@ -36,7 +36,7 @@
         <el-button v-waves type="primary" :loading="uploadLoading" icon="el-icon-upload">批量导入</el-button>
       </el-upload>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download">
-        <a :href="`${path}SAP scan_template.xlsx`" download="SAP scan_template.xlsx">模板下载</a>
+        <a :href="`${path}Hardcopy record.xlsx`" download="Hardcopy record.xlsx">模板下载</a>
       </el-button>
     </div>
 
@@ -73,6 +73,11 @@
           <span>{{ row.amount }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="数据导入时间" width="200" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.createAt }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="Actions" align="center" width="150px" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
@@ -100,8 +105,16 @@
           />
         </el-form-item>
         <el-form-item label="Amount" prop="amount">
-          <el-input v-model.number="dialogData.amount" />
-        </el-form-item>
+          <el-input
+            v-model.number="dialogData.amount"
+            @input="(val) => {
+              dialogData.amount = val
+                .replace(/[^0-9.]/g, '')
+                .replace('.', '#*')
+                .replace(/\./g, '')
+                .replace('#*', '.');
+            }"
+          /></el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
@@ -222,7 +235,7 @@ export default {
           })
 
           // //获取Sheet
-          var sheet = wb.Sheets[wb.SheetNames[0]]
+          var sheet = wb.Sheets[this.listQuery.companyCode]
 
           // //获取sheet中所有有效的单元格
           // var range = XLSX.utils.decode_range(sheet['!ref'])
@@ -295,7 +308,7 @@ export default {
                 if (res.success === true) {
                   this.$notify({
                     title: 'Success',
-                    message: '上传成功',
+                    message: `上传成功,共导入${res.response}条数据`,
                     type: 'success',
                     duration: 3000
                   })

@@ -192,6 +192,13 @@
             <param name="model">model</param>
             <returns></returns>
         </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.ReportController.GetAllPaymentInvoiceReport(FinanceInvoiceCompare.WebApi.Model.MatchInvoiceReportRequestModel)">
+            <summary>
+            获取所有付款发票信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.RoleController">
             <summary>
             角色逻辑

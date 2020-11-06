@@ -15,9 +15,9 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public bool IsActive { get; set; }
 
-        public bool IsDelete { get; set; } = false;
+        public bool IsDelete { get; set; }
 
-        public int RoleID { get; set; }
+        public int? RoleID { get; set; }
 
         public string RoleName { get; set; }
 

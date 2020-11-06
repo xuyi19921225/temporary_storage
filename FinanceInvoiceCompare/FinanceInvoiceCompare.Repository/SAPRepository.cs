@@ -18,7 +18,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository
         {
             var allSapInvoice = Db.Queryable<SAPInvoiceData, Vendor, Invoice>((a1, b2, c3) => new object[]
                {
-                        JoinType.Left,a1.Vendor==b2.VendorCode&&b2.IsDelete==false,
+                        JoinType.Left,a1.Vendor==b2.VendorCode&&a1.Cocd==b2.CompanyCode&&b2.IsDelete==false,
                         JoinType.Left,a1.Reference==c3.InvoiceNumber&&a1.Cocd==c3.CompanyCode&&c3.IsDelete==false
 
                })
@@ -45,7 +45,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                 AmtLC2=a1.AmtLC2,
                 Assign=a1.Assign,
                 GL=a1.GL,
-                ClrngDoc=a1.ClrngDoc
+                ClrngDoc=a1.ClrngDoc,
+                CreateAt = a1.CreateAt,
+                CreateBy=a1.CreateBy,
+                UpdatedAt=a1.UpdatedAt,
+                UpdatedBy=a1.UpdatedBy
             });
 
 
@@ -84,7 +88,11 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                     Assign = p1.Assign,
                     GL = p1.GL,
                     ClrngDoc = p1.ClrngDoc,
-                    Check=p2.Check
+                    Check=p2.Check,
+                    CreateAt = p1.CreateAt,
+                    CreateBy = p1.CreateBy,
+                    UpdatedAt = p1.UpdatedAt,
+                    UpdatedBy = p1.UpdatedBy
                 })
                 .OrderBy((p1)=>p1.Id,OrderByType.Desc)
                 .ToPageListAsync(model.PageIndex, model.PageSize, totalCount),

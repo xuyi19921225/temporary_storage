@@ -2,6 +2,37 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" placeholder="发票号码" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.version" style="width: 150px;" placeholder="版本" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select
+        v-model="listQuery.companyCode"
+        class="filter-item"
+        placeholder="请选择公司编码"
+        style="width: 150px;"
+        clearable
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in companyCodeList"
+          :key="item.Id"
+          :label="item.code"
+          :value="item.code"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.blockStatus"
+        class="filter-item"
+        placeholder="BlockStatus"
+        style="width: 150px;"
+        clearable
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in blockStatusList"
+          :key="item.Id"
+          :label="item.blockStatus"
+          :value="item.blockStatus"
+        />
+      </el-select>
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
@@ -31,12 +62,17 @@
       highlight-current-row
       :cell-style="setCellColor"
     >
+      <el-table-column label="Version" width="160" align="center" fixed>
+        <template slot-scope="{row}">
+          <span>{{ row.version }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="VendorCode" width="160" align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="200" align="center" fixed>
+      <el-table-column label="VendorChName" width="200" show-overflow-tooltip align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
@@ -56,7 +92,11 @@
           <span>{{ row.documentNo }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="DocType" width="120" align="center">
+      <el-table-column
+        label="DocType"
+        width="120"
+        align="center"
+      >
         <template slot-scope="{row}">
           <span>{{ row.type }}</span>
         </template>
@@ -91,7 +131,7 @@
           <span>{{ row.dcAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Match Date" width="150" align="center">
+      <el-table-column label="Match Date" width="200" align="center">
         <template slot-scope="{row}">
           <span>{{ row.matchDate }}</span>
         </template>
@@ -140,10 +180,14 @@ export default {
       list: null,
       total: 0,
       listLoading: false,
+      companyCodeList: this.$store.getters.company,
       listQuery: {
         pageindex: 1,
         pagesize: 20,
         invoiceNumber: '',
+        version: '',
+        companyCode: '',
+        blockStatus: '',
         multipleCompany: this.$store.getters.company.map(item => {
           return item.code
         }).join(',')
@@ -152,7 +196,16 @@ export default {
       downloading: false,
       filename: '付款发票信息',
       autoWidth: true,
-      bookType: 'xlsx'
+      bookType: 'xlsx',
+      blockStatusList: [
+        {
+          id: 0,
+          blockStatus: 'Block'
+        }, {
+          id: 1,
+          blockStatus: 'Payment'
+        }
+      ]
     }
   },
   created() {
@@ -162,7 +215,6 @@ export default {
     getList() {
       if (this.$store.getters.company && this.$store.getters.company.length > 0) {
         this.listLoading = true
-        this.listQuery.list = this.$store.getters.company
         getPaymentInvoiceReport(this.listQuery).then(res => {
           this.list = res.response.list
           this.total = res.response.totalCount
@@ -255,6 +307,7 @@ export default {
       getAllPaymentInvoiceReport(this.listQuery)
         .then(res => {
           const tHeader = [
+            'Version',
             'VendorCode',
             'VendorChName',
             'Reference',
@@ -273,6 +326,7 @@ export default {
             'Block Status'
           ]
           const filterVal = [
+            'version',
             'vendor',
             'vendorChName',
             'reference',

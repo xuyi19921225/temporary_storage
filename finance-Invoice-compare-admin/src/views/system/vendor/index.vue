@@ -1,11 +1,37 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.value" style="width: 150px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-input
+        v-model="listQuery.companycode"
+        style="width: 150px;"
+        class="filter-item"
+        placeholder="CompanyCode"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-input
+        v-model="listQuery.vendorcode"
+        style="width: 150px;"
+        class="filter-item"
+        placeholder="VendorCode"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-button
+        v-waves
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >
         查询
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-plus" @click="handleCreate">
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-plus"
+        @click="handleCreate"
+      >
         新增
       </el-button>
       <el-upload
@@ -18,10 +44,22 @@
         accept=".xlsx,application/vnd.ms-excel"
         :show-file-list="false"
       >
-        <el-button type="primary" :loading="uploadLoading" icon="el-icon-upload">批量导入</el-button>
+        <el-button
+          type="primary"
+          :loading="uploadLoading"
+          icon="el-icon-upload"
+        >批量导入</el-button>
       </el-upload>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download">
-        <a :href="`${path}master data_wuxiandsuzhou.xlsx`" download="master data_wuxiandsuzhou.xlsx">模板下载</a>
+      <el-button
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-download"
+      >
+        <a
+          :href="`${path}master data_wuxiandsuzhou.xlsx`"
+          download="master data_wuxiandsuzhou.xlsx"
+        >模板下载</a>
       </el-button>
     </div>
 
@@ -33,55 +71,121 @@
       fit
       highlight-current-row
     >
-      <el-table-column label="ID" prop="id" align="center" width="80">
+      <el-table-column
+        label="ID"
+        prop="id"
+        align="center"
+        width="80"
+      >
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="CompanyCode" align="center">
+      <el-table-column
+        label="CompanyCode"
+        align="center"
+      >
         <template slot-scope="{row}">
           <span>{{ row.companyCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorCode" align="center">
+      <el-table-column
+        label="VendorCode"
+        align="center"
+      >
         <template slot-scope="{row}">
           <span>{{ row.vendorCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" align="center">
+      <el-table-column
+        label="VendorChName"
+        align="center"
+      >
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Actions" align="center" width="250px" class-name="small-padding fixed-width">
+      <el-table-column
+        label="Actions"
+        align="center"
+        width="250px"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{row}">
-          <el-button type="primary" size="mini" icon="el-icon-edit" @click="handleUpdate(row)">
+          <el-button
+            type="primary"
+            size="mini"
+            icon="el-icon-edit"
+            @click="handleUpdate(row)"
+          >
             编辑
           </el-button>
-          <el-button v-if="row.status!='deleted'" size="mini" icon="el-icon-delete" type="danger" @click="handleDelete(row)">
+          <el-button
+            v-if="row.status!='deleted'"
+            size="mini"
+            icon="el-icon-delete"
+            type="danger"
+            @click="handleDelete(row)"
+          >
             删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageindex" :limit.sync="listQuery.pagesize" @pagination="getList" />
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="listQuery.pageindex"
+      :limit.sync="listQuery.pagesize"
+      @pagination="getList"
+    />
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑供应商':'新增供应商'">
-      <el-form ref="dataForm" :model="dialogData" label-width="140px" label-position="left" :rules="rules">
-        <el-form-item label="CompanyCode" prop="companyCode">
-          <el-input v-model="dialogData.companyCode" :disabled="dialogType==='edit'?true:false" />
+    <el-dialog
+      :visible.sync="dialogVisible"
+      :title="dialogType==='edit'?'编辑供应商':'新增供应商'"
+    >
+      <el-form
+        ref="dataForm"
+        :model="dialogData"
+        label-width="140px"
+        label-position="left"
+        :rules="rules"
+      >
+        <el-form-item
+          label="CompanyCode"
+          prop="companyCode"
+        >
+          <el-input
+            v-model="dialogData.companyCode"
+            :disabled="dialogType==='edit'?true:false"
+          />
         </el-form-item>
-        <el-form-item label="VendorCode" prop="vendorCode">
-          <el-input v-model="dialogData.vendorCode" :disabled="dialogType==='edit'?true:false" />
+        <el-form-item
+          label="VendorCode"
+          prop="vendorCode"
+        >
+          <el-input
+            v-model="dialogData.vendorCode"
+            :disabled="dialogType==='edit'?true:false"
+          />
         </el-form-item>
-        <el-form-item label="VendorChName" prop="vendorChName">
+        <el-form-item
+          label="VendorChName"
+          prop="vendorChName"
+        >
           <el-input v-model="dialogData.vendorChName" />
         </el-form-item>
       </el-form>
       <div style="text-align:right;">
-        <el-button type="danger" @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="confirm">确认</el-button>
+        <el-button
+          type="danger"
+          @click="dialogVisible=false"
+        >取消</el-button>
+        <el-button
+          type="primary"
+          @click="confirm"
+        >确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -99,7 +203,6 @@ export default {
   directives: { waves },
   data() {
     return {
-
       path: process.env.BASE_URL,
       tableKey: 0,
       list: null,
@@ -108,7 +211,8 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        value: ''
+        companycode: '',
+        vendorcode: ''
       },
       uploadLoading: false,
       dialogVisible: false,
@@ -164,36 +268,62 @@ export default {
 
         if (outdata.length > 0) {
           const vendors = []
-          outdata.forEach((value, index, arr) => {
-            vendors.push({
-              companyCode: value.公司代码,
-              vendorCode: value.Vendor,
-              // eslint-disable-next-line no-eval
-              vendorChName: eval('value["Acct holder"]'),
-              createBy: this.$store.getters.userID
-            })
-          })
-          addVendor(vendors)
-            .then(res => {
-              this.uploadLoading = false
-              if (res.success === true) {
-                this.$notify({
-                  title: 'Success',
-                  message: '上传成功',
-                  type: 'success',
-                  duration: 3000
-                })
-                this.getList()
+          var isExits = false
+          // 检查excel中是否存在重复的companycode和vendorcode 的组合
+          try {
+            outdata.forEach((value, index, arr) => {
+              vendors.some(function(item, index) {
+                if (item.companyCode === value.公司代码 && item.vendorCode === value.Vendor) {
+                  isExits = true
+                  return isExits
+                }
+              })
+
+              if (isExits) {
+                throw new Error('存在相同的供应商，请检查！')// 报错，就跳出循环
               } else {
-                this.$notify.error({
-                  title: 'Error',
-                  message: res.message,
-                  duration: 3000
+                vendors.push({
+                  companyCode: value.公司代码,
+                  vendorCode: value.Vendor,
+                  // eslint-disable-next-line no-eval
+                  vendorChName: eval('value["Acct holder"]'),
+                  createBy: this.$store.getters.userID,
+                  updatedBy: this.$store.getters.userID
                 })
               }
-            }).catch(
-              this.uploadLoading = false
-            )
+            })
+          } catch (error) {
+            this.$notify.error({
+              title: 'Warning',
+              message: error,
+              duration: 3000
+            })
+            this.uploadLoading = false
+          }
+
+          if (!isExits) {
+            addVendor(vendors)
+              .then(res => {
+                this.uploadLoading = false
+                if (res.success === true) {
+                  this.$notify({
+                    title: 'Success',
+                    message: '上传成功',
+                    type: 'success',
+                    duration: 3000
+                  })
+                  this.getList()
+                } else {
+                  this.$notify.error({
+                    title: 'Error',
+                    message: res.message,
+                    duration: 3000
+                  })
+                }
+              }).catch(
+                this.uploadLoading = false
+              )
+          }
         } else {
           this.$notify.warning({
             title: 'warning',
@@ -309,5 +439,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

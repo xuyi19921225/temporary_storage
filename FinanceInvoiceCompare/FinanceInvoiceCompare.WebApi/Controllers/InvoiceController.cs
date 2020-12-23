@@ -36,7 +36,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
 
         /// <summary>
-        /// 获取SAP发票信息
+        /// 获取SAP发票信息(分页)
         /// </summary>
         /// <param name="model">model</param>
         /// <returns></returns>
@@ -50,6 +50,24 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                 Message = "获取信息成功",
                 Success = true,
                 Response = await sAPService.GetSAPInvoiceList(model)
+            };
+        }
+
+        /// <summary>
+        /// 获取SAP发票信息
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetAllSAPInvoiceList")]
+        public async Task<MessageModel<List<SAPInvoiceData>>> GetAllSAPInvoiceList([FromQuery] SAPRequestModel model)
+        {
+            return new MessageModel<List<SAPInvoiceData>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await sAPService.GetAllSAPInvoiceList(model)
             };
         }
 
@@ -68,15 +86,40 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             if (sapInvoice.Count > 0)
             {
 
-                var flag = data.Success = await sAPService.Add(sapInvoice) > 0;
-
-                if (flag)
+                sapInvoice.ForEach(item =>
                 {
-                    data.Message = "添加成功";
+                    if (!string.IsNullOrEmpty(item.Cocd))
+                    {
+                        item.Cocd = item.Cocd.PadLeft(4, '0');
+                    }
+                });
+
+                ////检查CompanyCode和DocumentNo的是否唯一
+                Expressionable<SAPInvoiceData> exp = new Expressionable<SAPInvoiceData>();
+
+                foreach (var item in sapInvoice)
+                {
+                    exp.Or(it => it.Cocd == item.Cocd && it.DocumentNo == item.DocumentNo);
+                }
+
+                var existsSAPInvoice = await sAPService.Query(exp.ToExpression());
+
+                if (existsSAPInvoice.Count > 0)
+                {
+                    data.Message = "SAP发票重复，请检查！";
                 }
                 else
                 {
-                    data.Message = "添加失败";
+                    var flag = data.Success = await sAPService.Add(sapInvoice) > 0;
+
+                    if (flag)
+                    {
+                        data.Message = "添加成功";
+                    }
+                    else
+                    {
+                        data.Message = "添加失败";
+                    }
                 }
 
             }
@@ -95,34 +138,45 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [HttpPost]
         [Authorize]
         [Route("AddSiteInvoice")]
-        public async Task<MessageModel<int>> AddSiteInvoice([FromBody] List<Invoice> invoices)
+        public async Task<MessageModel<List<Invoice>>> AddSiteInvoice([FromBody] List<Invoice> invoices)
         {
-            var data = new MessageModel<int>();
+            var data = new MessageModel<List<Invoice>>();
             try
             {
                 unitOfWork.BeginTran();
                 if (invoices.Count > 0)
                 {
 
-                    var invoiceNumbers = invoices.Select(x => x.InvoiceNumber).ToArray();
-                    var companyCodes = invoices.Select(x => x.CompanyCode).ToArray();
+                    #region 转化数据格式   CompanyCode不够4位前面补0
 
+                    invoices.ForEach(item =>
+                    {
+                        if (!string.IsNullOrEmpty(item.CompanyCode))
+                        {
+                            item.CompanyCode = item.CompanyCode.PadLeft(4, '0');
+                        }
+                    });
 
+                    #endregion
 
-                    // 检查是否存在相同的发票号
-                    var exsitsVendors = await invoiceService.Query(x => x.IsDelete == false && invoiceNumbers.Contains(x.InvoiceNumber) && companyCodes.Contains(x.CompanyCode));
+                    #region 检查是否存在相同的发票号
 
-                    //var s = await invoiceService.Query(x => x.IsDelete == false);
-                    //var list = from item in s
-                    //           join item2 in invoices on new { item.CompanyCode ,item.InvoiceNumber} equals new { item2.CompanyCode,item2.InvoiceNumber }
-                    //           select item;
+                    Expressionable<Invoice> exp = new Expressionable<Invoice>();
 
-                    //var exsitsVendors = list;
+                    foreach (var item in invoices)
+                    {
+                        exp.Or(it => it.IsDelete == false && it.InvoiceNumber == item.InvoiceNumber && it.CompanyCode == item.CompanyCode);
+                    }
 
-                    if (exsitsVendors.Count > 0)
+                    var exsitsInvoices = await invoiceService.Query(exp.ToExpression());
+
+                    #endregion
+
+                    if (exsitsInvoices.Count > 0)
                     {
                         data.Success = false;
-                        data.Message = "存在相同的InvoiceNumber，请检查";
+                        data.Message = "存在相同的InvoiceNumber！";
+                        data.Response = exsitsInvoices;
                     }
                     else
                     {
@@ -131,9 +185,17 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
 
 
                         //// 查询上传的发票相匹配的SAP发票的List
-                        var matchList = (await sAPService.Query(x => x.IsDelete == false && invoiceNumbers.Contains(x.Reference) && companyCodes.Contains(x.Cocd))).Select(x=>new {x.Reference,x.Cocd }).Distinct().ToList();
 
-                        var updateList=new List<Invoice>();
+                        Expressionable<SAPInvoiceData> expSAP = new Expressionable<SAPInvoiceData>();
+
+                        foreach (var item in invoices)
+                        {
+                            expSAP.Or(it => it.IsDelete == false && it.Reference == item.InvoiceNumber && it.Cocd == item.CompanyCode);
+                        }
+
+                        var matchList = (await sAPService.Query(expSAP.ToExpression())).Select(x => new { x.Reference, x.Cocd }).Distinct().ToList();
+
+                        var updateList = new List<Invoice>();
 
                         if (matchList.Count > 0)
                         {
@@ -145,17 +207,15 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                             //// 更新Site发票MatchDate
                             data.Success = flag = await invoiceService.Update(updateList, new List<string>() { "MatchDate", "InvoiceNumber", "CompanyCode" }, null, x => new { x.InvoiceNumber, x.CompanyCode });
                         }
-                        else 
+                        else
                         {
-                           
+
                             data.Success = flag;
                         }
 
-                
+
                         if (flag)
                         {
-                            ////记录导入数量
-                            data.Response = invoices.Count;
                             data.Message = "添加成功";
                         }
                         else
@@ -185,10 +245,10 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Route("GetSiteInvoiceList")]
         public async Task<MessageModel<PageModel<Invoice>>> GetSiteInvoiceList([FromQuery] SiteInvoiceRequestModel model)
         {
-           var expressions= Expressionable.Create<Invoice>()
-                .And(it => it.IsDelete == false)
-                .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode==model.CompanyCode)
-                .AndIF(!string.IsNullOrEmpty(model.InvoiceNumber),it => it.InvoiceNumber.Contains(model.InvoiceNumber)).ToExpression();
+            var expressions = Expressionable.Create<Invoice>()
+                 .And(it => it.IsDelete == false)
+                 .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode == model.CompanyCode)
+                 .AndIF(!string.IsNullOrEmpty(model.InvoiceNumber), it => it.InvoiceNumber.Contains(model.InvoiceNumber)).ToExpression();
 
             return new MessageModel<PageModel<Invoice>>()
             {
@@ -208,11 +268,11 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         [Authorize]
         [Route("SaveInvoice")]
 
-        public async Task<MessageModel<string>> SaveInvoice([FromBody]Invoice model)
+        public async Task<MessageModel<string>> SaveInvoice([FromBody] Invoice model)
         {
             var data = new MessageModel<string>();
 
-            var flag = data.Success = await invoiceService.Update(model,new List<string>() {"InvoiceNumber", "InvoiceDate", "InvoiceDate", "Amount", "UpdatedBy", "UpdatedAt" });
+            var flag = data.Success = await invoiceService.Update(model, new List<string>() { "InvoiceNumber", "InvoiceDate", "InvoiceDate", "Amount", "UpdatedBy", "UpdatedAt" });
             if (flag)
             {
                 data.Message = "更新成功";

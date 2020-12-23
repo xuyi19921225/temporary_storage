@@ -41,7 +41,7 @@
           <span>#N/A</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="200" align="center" fixed>
+      <el-table-column label="VendorChName" width="200" show-overflow-tooltip align="center" fixed>
         <template>
           <span>#N/A</span>
         </template>
@@ -81,7 +81,7 @@
           <span>#N/A</span>
         </template>
       </el-table-column>
-      <el-table-column label="Amount" width="120" align="center">
+      <el-table-column label="Amount" width="150" align="center">
         <template>
           <span>#N/A</span>
         </template>

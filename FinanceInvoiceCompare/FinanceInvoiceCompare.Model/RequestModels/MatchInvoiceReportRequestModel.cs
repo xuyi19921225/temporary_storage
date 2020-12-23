@@ -14,5 +14,11 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string[] CompanyCodeList => MultipleCompany?.Split(",");
 
+        public string Version { get; set; }
+
+        public string CompanyCode { get; set; }
+
+        public string BlockStatus { get; set; }
+
     }
 }

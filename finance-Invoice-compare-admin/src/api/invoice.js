@@ -8,6 +8,14 @@ export function getSAPInvoiceList(params) {
   })
 }
 
+export function getAllSAPInvoiceList(params) {
+  return request({
+    url: '/invoice/getAllSAPInvoiceList',
+    method: 'get',
+    params
+  })
+}
+
 export function addSAPInvoice(data) {
   return request({
     url: '/invoice/addSAPInvoice',

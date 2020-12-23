@@ -56,6 +56,13 @@
         </member>
         <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetSAPInvoiceList(FinanceInvoiceCompare.WebApi.Model.SAPRequestModel)">
             <summary>
+            获取SAP发票信息(分页)
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetAllSAPInvoiceList(FinanceInvoiceCompare.WebApi.Model.SAPRequestModel)">
+            <summary>
             获取SAP发票信息
             </summary>
             <param name="model">model</param>
@@ -321,6 +328,11 @@
             </summary>
             <param name="id">id</param>
             <returns></returns>
+        </member>
+        <member name="T:FinanceInvoiceCompare.WebApi.Controllers.VendorController">
+            <summary>
+            供应商业务
+            </summary>
         </member>
         <member name="M:FinanceInvoiceCompare.WebApi.Controllers.VendorController.Get(FinanceInvoiceCompare.WebApi.Model.VendorRequestModel)">
             <summary>

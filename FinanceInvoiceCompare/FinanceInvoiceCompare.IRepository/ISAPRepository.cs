@@ -8,5 +8,7 @@ namespace FinanceInvoiceCompare.WebApi.IRepository
     public interface ISAPRepository:IBaseRepository<SAPInvoiceData>
     {
         Task<PageModel<SAPInvoiceData>> GetSAPInvoiceList(SAPRequestModel model);
+
+        Task<List<SAPInvoiceData>> GetAllSAPInvoiceList(SAPRequestModel model);
     }
 }

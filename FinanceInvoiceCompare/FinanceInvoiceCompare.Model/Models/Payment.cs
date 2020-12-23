@@ -55,6 +55,9 @@ namespace FinanceInvoiceCompare.WebApi.Model
         [SugarColumn(IsIgnore = true)]
         public string BlockStatus { get; set; }
 
+        [SugarColumn(IsIgnore = true)]
+        public string Version { get; set; }
+
 
     }
 }

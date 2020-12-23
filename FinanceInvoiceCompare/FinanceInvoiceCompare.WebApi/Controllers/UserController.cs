@@ -137,7 +137,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                     var isAllDeleted = await userRoleService.DeleteByIds(usreroles);
 
                     ////添加关系
-                    var addUserRole = await userRoleService.Add(new UserRoleMapping() { RoleID = model.RID, UserID = model.Id, CreateBy = model.UpdatedBy });
+                    var addUserRole = await userRoleService.Add(new UserRoleMapping() { RoleID = model.RID, UserID = model.Id, CreateBy = model.UpdatedBy,CreateAt=DateTime.Now });
                 }
           
                 var flag = data.Success = await userService.Update(model);

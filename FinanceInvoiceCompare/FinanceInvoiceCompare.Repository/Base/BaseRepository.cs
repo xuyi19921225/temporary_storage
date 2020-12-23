@@ -4,6 +4,7 @@ using FinanceInvoiceCompare.WebApi.Model;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -371,27 +372,39 @@ namespace FinanceInvoiceCompare.WebApi.Repository.Base
             return await _db.Queryable<TEntity>().OrderByIF(!string.IsNullOrEmpty(strOrderByFileds), strOrderByFileds).WhereIF(!string.IsNullOrEmpty(strWhere), strWhere).Take(intTop).ToListAsync();
         }
 
-        ///// <summary>
-        ///// 根据sql语句查询
-        ///// </summary>
-        ///// <param name="strSql">完整的sql语句</param>
-        ///// <param name="parameters">参数</param>
-        ///// <returns>泛型集合</returns>
-        //public async Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null)
-        //{
-        //    return await _db.Ado.SqlQueryAsync<TEntity>(strSql, parameters);
-        //}
+        /// <summary>
+        /// 根据sql语句查询
+        /// </summary>
+        /// <param name="strSql">完整的sql语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>泛型集合</returns>
+        public async Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null)
+        {
+            return await _db.Ado.SqlQueryAsync<TEntity>(strSql, parameters);
+        }
 
-        ///// <summary>
-        ///// 根据sql语句查询
-        ///// </summary>
-        ///// <param name="strSql">完整的sql语句</param>
-        ///// <param name="parameters">参数</param>
-        ///// <returns>DataTable</returns>
-        //public async Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null)
-        //{
-        //    return await _db.Ado.GetDataTableAsync(strSql, parameters);
-        //}
+        /// <summary>
+        /// 根据sql语句查询
+        /// </summary>
+        /// <param name="strSql">完整的sql语句</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>DataTable</returns>
+        public async Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null)
+        {
+            return await _db.Ado.GetDataTableAsync(strSql, parameters);
+        }
+
+
+        /// <summary>
+        /// 功能描述：使用存储过程执行操作
+        /// </summary>
+        /// <param name="procName">存储过程名称</param>
+        /// <param name="parameters">参数</param>
+        /// <returns>执行返回信息</returns>
+        public async Task<string> UseProc(string procName, List<SugarParameter> parameters=null) 
+        {
+            return await _db.Ado.UseStoredProcedure().GetStringAsync(procName, parameters);
+        }
 
         /// <summary>
         /// 功能描述:分页查询

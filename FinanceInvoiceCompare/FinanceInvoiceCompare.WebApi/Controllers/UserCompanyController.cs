@@ -71,7 +71,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
                     {
                         model.list.ForEach(x =>
                         {
-                            userCompany.Add(new UserCompanyMapping() { UserID = model.UserID, CompanyID = x.Id, CreateAt = DateTime.Now, CreateBy = x.CreateBy });
+                            userCompany.Add(new UserCompanyMapping() { UserID = model.UserID, CompanyID = x.Id, CreateAt = DateTime.Now, CreateBy = x.CreateBy});
                         });
                         ////添加关系
                         flag = await userCompanyService.Add(userCompany) > 0;

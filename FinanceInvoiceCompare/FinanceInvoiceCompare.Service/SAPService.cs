@@ -2,6 +2,7 @@
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using FinanceInvoiceCompare.WebApi.Service.BASE;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FinanceInvoiceCompare.WebApi.Service
@@ -19,6 +20,11 @@ namespace FinanceInvoiceCompare.WebApi.Service
         public async Task<PageModel<SAPInvoiceData>> GetSAPInvoiceList(SAPRequestModel model) 
         {
             return await sapRepository.GetSAPInvoiceList(model);
+        }
+
+        public async Task<List<SAPInvoiceData>> GetAllSAPInvoiceList(SAPRequestModel model)
+        {
+            return await sapRepository.GetAllSAPInvoiceList(model);
         }
     }
 }

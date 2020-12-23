@@ -41,8 +41,10 @@ namespace FinanceInvoiceCompare.WebApi.IService.BASE
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, string strOrderByFileds);
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, Expression<Func<TEntity, object>> orderByExpression, bool isAsc = true);
         Task<List<TEntity>> Query(string strWhere, string strOrderByFileds);
-        //Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null);
-        //Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null);
+        Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null);
+        Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null);
+
+        Task<string> UseProc(string procName, List<SugarParameter> parameters = null);
 
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, int intTop, string strOrderByFileds);
         Task<List<TEntity>> Query(string strWhere, int intTop, string strOrderByFileds);

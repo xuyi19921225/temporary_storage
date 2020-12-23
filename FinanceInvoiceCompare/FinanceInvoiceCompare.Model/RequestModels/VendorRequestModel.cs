@@ -6,6 +6,8 @@ namespace FinanceInvoiceCompare.WebApi.Model
 {
     public class VendorRequestModel: PageEntity
     {
-        public string Value { get; set; }
+        public string CompanyCode { get; set; }
+
+        public string VendorCode { get; set; }
     }
 }

@@ -44,6 +44,11 @@
           <span>{{ row.companyCode }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="Invoice Date" width="150" align="center" show-overflow-tooltip>
+        <template slot-scope="{row}">
+          <span>{{ row.invoiceDate }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="发票金额" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.amount }}</span>
@@ -59,7 +64,7 @@
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="200" align="center" fixed>
+      <el-table-column label="VendorChName" width="200" align="center" show-overflow-tooltip fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
@@ -141,7 +146,7 @@
       </el-table-column>
       <el-table-column label="Check" width="120" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.check }}</span>
+          <span>{{ row.check.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Data Source" width="150" align="center">
@@ -208,7 +213,6 @@ export default {
     getList() {
       if (this.$store.getters.company && this.$store.getters.company.length > 0) {
         this.listLoading = true
-        this.listQuery.list = this.$store.getters.company
         getCompareMatchInvoiceReport(this.listQuery).then(res => {
           this.list = res.response.list
           this.total = res.response.totalCount
@@ -221,12 +225,13 @@ export default {
       }
     },
     exportExcel() {
-      this.downloadLoading = true
+      this.downloading = true
       getAllCompareMatchInvoiceReport(this.listQuery)
         .then(res => {
           const tHeader = [
             '发票号码',
-            '长别',
+            '厂别',
+            'Invoice Date',
             '发票金额',
             '是否一致',
             'VendorCode',
@@ -253,6 +258,7 @@ export default {
           const filterVal = [
             'invoiceNumber',
             'companyCode',
+            'invoiceDate',
             'amount',
             'isMatch',
             'vendor',
@@ -285,10 +291,10 @@ export default {
             autoWidth: this.autoWidth,
             bookType: this.bookType
           })
-          this.downloadLoading = false
+          this.downloading = false
         }
         ).catch(
-          this.downloadLoading = false
+          this.downloading = false
         )
     },
     handleFilter() {

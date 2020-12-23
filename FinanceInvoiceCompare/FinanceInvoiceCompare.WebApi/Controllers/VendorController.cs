@@ -1,27 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using FinanceInvoiceCompare.WebApi.Common;
+using FinanceInvoiceCompare.WebApi.IRepository;
 using FinanceInvoiceCompare.WebApi.IService;
 using FinanceInvoiceCompare.WebApi.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SqlSugar;
 
 namespace FinanceInvoiceCompare.WebApi.Controllers
 {
+    /// <summary>
+    /// 供应商业务
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class VendorController : ControllerBase
     {
         private readonly IVendorService vendorService;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ILogger<VendorController> logger;
 
-        public VendorController(IVendorService vendorService)
+        public VendorController(IVendorService vendorService, IUnitOfWork unitOfWork, ILogger<VendorController> logger)
         {
             this.vendorService = vendorService;
+            this.unitOfWork = unitOfWork;
+            this.logger = logger;
         }
 
 
@@ -36,7 +44,9 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         {
             var expressions = Expressionable.Create<Vendor>()
             .And(it => it.IsDelete == false)
-            .AndIF(!string.IsNullOrEmpty(model.Value), it => it.CompanyCode.Contains(model.Value) || it.VendorCode.Contains(model.Value) || it.VendorChName.Contains(model.Value)).ToExpression();
+            .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode == model.CompanyCode)
+            .AndIF(!string.IsNullOrEmpty(model.VendorCode), it => it.VendorCode == model.VendorCode)
+            .ToExpression();
 
             return new MessageModel<PageModel<Vendor>>()
             {
@@ -56,36 +66,111 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         public async Task<MessageModel<string>> Post([FromBody] List<Vendor> vendors)
         {
             var data = new MessageModel<string>();
-
             if (vendors.Count > 0)
             {
+                var companyCodes = string.Join(',', vendors.Select(x => string.IsNullOrEmpty(x.CompanyCode) ? "" : x.CompanyCode.PadLeft(4, '0')).ToArray());
+                var vendorCodes = string.Join(',', vendors.Select(x => x.VendorCode).ToArray());
+                var vendorChNames = string.Join(',', vendors.Select(x => x.VendorChName).ToArray());
+                var operators = vendors.First().CreateBy;
 
-                var vendorCodes = vendors.Select(x => x.VendorCode).ToArray();
 
-                //// 检查是否存在相同的VendorCode
-                var exsitsVendors = (await vendorService.Query(x => x.IsDelete==false && vendorCodes.Contains(x.VendorCode)));
-
-                bool flag = false;
-
-                if (exsitsVendors.Count > 0)
+                List<SugarParameter> parameters = new List<SugarParameter>()
                 {
-                    data.Success = flag;
-                    data.Message = "存在相同的VendorCode，请检查";
+                    new SugarParameter("@VendorCodes",vendorCodes),
+                    new SugarParameter("@VendorChNames",vendorChNames),
+                    new SugarParameter("@CompanyCodes",companyCodes),
+                    new SugarParameter("@Operator",operators),
+                    new SugarParameter("@ResultMessage",string.Empty,true),
+                };
+
+                parameters[0].Size = -1;
+                parameters[1].Size = -1;
+                parameters[2].Size = -1;
+                parameters[3].Size = 50;
+                parameters[4].Size = -1;
+
+                await vendorService.UseProc("Proc_Export_Vendor", parameters);
+
+
+                string returnMessage = parameters[4].Value.ToString();
+
+                if (returnMessage == "Success")
+                {
+                    data.Success = true;
+                    data.Message = "添加成功";
                 }
                 else
                 {
-                    data.Success = flag = await vendorService.Add(vendors) > 0;
-
-                    if (flag)
-                    {
-                        data.Message = "添加成功";
-                    }
-                    else
-                    {
-                        data.Message = "添加失败";
-                    }
+                    data.Message = "添加失败";
                 }
+
             }
+
+            //try
+            //{
+            //    unitOfWork.BeginTran();
+            //    if (vendors.Count > 0)
+            //    {
+            //        //// 检查是否存在相同的VendorCode
+            //        //Expressionable<Vendor> exp = new Expressionable<Vendor>();
+
+            //        //foreach (var item in vendors)
+            //        //{
+            //        //    exp.Or(it => it.IsDelete == false && it.VendorCode == item.VendorCode && it.CompanyCode == item.CompanyCode);
+            //        //}
+
+            //        //////这种方式会溢出
+            //        //var exsitsVendors = await vendorService.Query(exp.ToExpression());
+
+            //        var allVendors = await vendorService.Query(x => x.IsDelete == false);
+
+
+            //        bool flag = false;
+
+            //        ////查询需要需要的vendors
+            //        var updateVendors = (from a in vendors
+            //                             join b in allVendors on new { a.CompanyCode, a.VendorCode } equals new { b.CompanyCode, b.VendorCode } into rb
+            //                             from c in rb.DefaultIfEmpty()
+            //                             select a).ToList();
+
+
+            //        if (updateVendors.Count > 0)
+            //        {
+            //            //// 更新相同的VendorCode和companycode信息
+            //            flag = await vendorService.Update(updateVendors, new List<string>() { "VendorChName", "CompanyCode", "VendorCode", "UpdatedAt", "UpdatedBy" }, null, x => new { x.CompanyCode, x.VendorCode });
+            //        }
+
+            //        var insertVendors = (from a in vendors
+            //                             join b in allVendors on new { a.CompanyCode, a.VendorCode } equals new { b.CompanyCode, b.VendorCode } into rb
+            //                             from c in rb.DefaultIfEmpty()
+            //                             select c).ToList();
+
+            //        if (insertVendors.Count > 0)
+            //        {
+            //            //// 插入的Vendor信息
+            //            flag = await vendorService.Add(insertVendors) > 0;
+            //        }
+
+
+            //        unitOfWork.CommitTran();
+
+            //        data.Success = flag;
+            //        if (flag)
+            //        {
+            //            data.Message = "添加成功";
+            //        }
+            //        else
+            //        {
+            //            unitOfWork.RollbackTran();
+            //            data.Message = "添加失败";
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    unitOfWork.RollbackTran();
+            //    logger.LogError(ex, ex.Message);
+            //}
 
             return data;
         }
@@ -97,7 +182,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         /// <returns></returns>
         [HttpPut]
         [Authorize]
-        public async Task<MessageModel<string>> Put([FromBody]Vendor model)
+        public async Task<MessageModel<string>> Put([FromBody] Vendor model)
         {
             var data = new MessageModel<string>();
 

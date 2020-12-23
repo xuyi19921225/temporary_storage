@@ -41,7 +41,7 @@
           <span>{{ row.vendor }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="VendorChName" width="200" align="center" fixed>
+      <el-table-column label="VendorChName" width="200" show-overflow-tooltip align="center" fixed>
         <template slot-scope="{row}">
           <span>{{ row.vendorChName }}</span>
         </template>
@@ -123,7 +123,7 @@
       </el-table-column>
       <el-table-column label="Check" width="120" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.check }}</span>
+          <span>{{ row.check.toFixed(2) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Data Source" width="150" align="center">
@@ -176,7 +176,6 @@ export default {
     getList() {
       if (this.$store.getters.company && this.$store.getters.company.length > 0) {
         this.listLoading = true
-        this.listQuery.list = this.$store.getters.company
         getMatchInvoiceReport(this.listQuery).then(res => {
           this.list = res.response.list
           this.total = res.response.totalCount

@@ -7,7 +7,7 @@
         placeholder="请选择公司编码"
         style="width: 150px;"
         clearable
-        @change="changeCompanyCode"
+        @change="handleFilter"
       >
         <el-option
           v-for="item in companyCodeList"
@@ -121,6 +121,45 @@
         <el-button type="primary" @click="confirm">确认</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="existsInvoiceVisible" title="重复发票信息">
+      <el-table
+        :key="tableKey"
+        v-loading="existsInvoiceLoading"
+        :data="existsInvoiceList"
+        :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+        fit
+        highlight-current-row
+      >
+        <el-table-column label="ID" prop="id" align="center" width="80">
+          <template slot-scope="{row}">
+            <span>{{ row.id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="CompanyCode" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.companyCode }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="InvoiceNumber" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.invoiceNumber }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="InvoiceDate" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.invoiceDate }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Amount" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.amount }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination v-show="existsInvoiceTotal>0" :total="existsInvoiceTotal" :page.sync="existsInvoiceQuery.pageindex" :limit.sync="existsInvoiceQuery.pagesize" @pagination="getExistsInvoiceList" />
+    </el-dialog>
   </div>
 </template>
 
@@ -185,6 +224,14 @@ export default {
             picker.$emit('pick', date)
           }
         }]
+      },
+      existsInvoiceVisible: false,
+      existsInvoiceList: null,
+      existsInvoiceTotal: 0,
+      existsInvoiceLoading: false,
+      existsInvoiceQuery: {
+        pageindex: 1,
+        pagesize: 10
       }
     }
   },
@@ -208,6 +255,13 @@ export default {
       }).catch(
         this.listLoading = false
       )
+    },
+    getExistsInvoiceList() {
+      var list = JSON.parse(sessionStorage.getItem('existsInvoiceList'))
+      this.existsInvoiceLoading = true
+      this.existsInvoiceList = list.slice((this.existsInvoiceQuery.pageindex - 1) * this.existsInvoiceQuery.pagesize, this.existsInvoiceQuery.pageindex * this.existsInvoiceQuery.pagesize - 1)
+      this.existsInvoiceTotal = list.length
+      this.existsInvoiceLoading = false
     },
     upload(file) {
       if (this.listQuery.companyCode === '') {
@@ -308,18 +362,18 @@ export default {
                 if (res.success === true) {
                   this.$notify({
                     title: 'Success',
-                    message: `上传成功,共导入${res.response}条数据`,
+                    message: `上传成功,共导入${invoiceList.length}条数据`,
                     type: 'success',
                     duration: 3000
                   })
                   this.getList()
                 } else {
-                  this.$notify.error({
-                    title: 'Error',
-                    message: res.message,
-                    duration: 3000
-                  })
+                  this.existsInvoiceVisible = true
+                  sessionStorage.setItem('existsInvoiceList', JSON.stringify(res.response))
+                  this.getExistsInvoiceList()
                 }
+              }).catch(() => {
+                this.uploadLoading = false
               })
           } else {
             this.$notify.warning({
@@ -387,7 +441,6 @@ export default {
       this.getList()
     },
     handleCreate() {
-      console.log(this.listQuery)
       if (this.listQuery.companyCode === '') {
         this.$message.warning({
           message: '请先选择公司编码，再进行上传或者新增操作'

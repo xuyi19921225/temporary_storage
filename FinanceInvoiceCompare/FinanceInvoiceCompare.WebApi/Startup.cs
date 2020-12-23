@@ -218,6 +218,7 @@ namespace FinanceInvoiceCompare.WebApi
                 option.SwaggerEndpoint("/swagger/v1/swagger.json", "v1 Docs");
                 //路径配置，设置为空，表示直接访问该文件
                 option.RoutePrefix = "";
+                option.DefaultModelExpandDepth(-1);
 
             });
 

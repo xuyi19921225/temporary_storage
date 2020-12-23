@@ -2,6 +2,23 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" placeholder="发票号码" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.companyCode" style="width: 150px;" placeholder="公司编码" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select
+        v-model="listQuery.isMatch"
+        class="filter-item"
+        style="width: 150px;"
+        placeholder="是否匹配"
+        clearable
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in isMatchList"
+          :key="item.id"
+          :label="item.match"
+          :value="item.match"
+        />
+      </el-select>
+      <el-input v-model.number="listQuery.check" style="width: 150px;" placeholder="check" class="filter-item" @keyup.enter.native="handleFilter" />
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
@@ -19,6 +36,9 @@
       </el-upload>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download">
         <a :href="`${path}SAP scan file1.xls`" download="SAP scan file1.xls">模板下载</a>
+      </el-button>
+      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" :loading="downloading" @click="exportExcel">
+        导出EXCEL
       </el-button>
     </div>
 
@@ -80,27 +100,27 @@
           <span>{{ row.docDate }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Currency" align="center">
+      <el-table-column label="Currency" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.curr }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Amount" align="center">
+      <el-table-column label="Amount" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.amountInDC }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IsMatch" align="center">
+      <el-table-column label="IsMatch" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.isMatch }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Check" align="center">
+      <el-table-column label="Check" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.check }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Remark" align="center">
+      <el-table-column label="Remark" width="120" align="center">
         <template slot-scope="{row}">
           <span>{{ row.remark }}</span>
         </template>
@@ -118,10 +138,12 @@
 </template>
 
 <script>
-import { getSAPInvoiceList, addSAPInvoice } from '@/api/invoice'
+import { getSAPInvoiceList, getAllSAPInvoiceList, addSAPInvoice } from '@/api/invoice'
 import XLSX from 'xlsx'
+import { export_json_to_excel } from '@/utils/Export2Excel'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { parseTime } from '@/utils'
 
 export default {
   name: 'SAPInvoiceListTable',
@@ -137,9 +159,26 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 20,
-        invoiceNumber: ''
+        invoiceNumber: '',
+        companyCode: '',
+        isMatch: '',
+        check: ''
       },
-      uploadLoading: false
+      filename: 'SAP发票信息',
+      autoWidth: true,
+      bookType: 'xlsx',
+      downloading: false,
+      uploadLoading: false,
+      isMatchList: [
+        {
+          id: 0,
+          match: 'Y'
+        }, {
+          id: 1,
+          match: 'N'
+        }
+      ]
+
     }
   },
   created() {
@@ -155,6 +194,60 @@ export default {
       }).catch(
         this.listLoading = false
       )
+    },
+    exportExcel() {
+      this.downloading = true
+      getAllSAPInvoiceList(this.listQuery)
+        .then(res => {
+          console.log(res.response)
+          const tHeader = [
+            'VendorCode',
+            'VendorChName',
+            'Reference',
+            'CompanyCode',
+            'DocumentNo',
+            'DocType',
+            'Net Due Date',
+            'Pstng Date',
+            'Doc Date',
+            'Currency',
+            'Amount',
+            'IsMatch',
+            'Check',
+            'Remark',
+            '数据导入时间'
+          ]
+          const filterVal = [
+            'vendor',
+            'vendorChName',
+            'reference',
+            'cocd',
+            'documentNo',
+            'type',
+            'netDueDT',
+            'pstngDate',
+            'docDate',
+            'curr',
+            'amountInDC',
+            'isMatch',
+            'check',
+            'remark',
+            'createAt'
+          ]
+          const list = res.response
+          const data = this.formatJson(filterVal, list)
+          export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: this.filename,
+            autoWidth: this.autoWidth,
+            bookType: this.bookType
+          })
+          this.downloading = false
+        }
+        ).catch(
+          this.downloading = false
+        )
     },
     upload(file) {
       this.uploadLoading = true
@@ -200,7 +293,6 @@ export default {
             arr[index].createBy = this.$store.getters.userID
           })
 
-          console.log(outdata)
           addSAPInvoice(outdata)
             .then(res => {
               this.uploadLoading = false
@@ -245,6 +337,17 @@ export default {
       this.$nextTick(() => {
         this.$refs['dataForm'].resetFields()
       })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v =>
+        filterVal.map(j => {
+          if (j === 'timestamp') {
+            return parseTime(v[j])
+          } else {
+            return v[j]
+          }
+        })
+      )
     }
   }
 }

@@ -1,6 +1,8 @@
 ﻿using FinanceInvoiceCompare.WebApi.Model;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,8 +44,10 @@ namespace FinanceInvoiceCompare.WebApi.IRepository.Base
 
         Task<List<TEntity>> Query(Expression<Func<TEntity, bool>> whereExpression, int intTop, string strOrderByFileds);
         Task<List<TEntity>> Query(string strWhere, int intTop, string strOrderByFileds);
-        //Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null);
-        //Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null);
+        Task<List<TEntity>> QuerySql(string strSql, SugarParameter[] parameters = null);
+        Task<DataTable> QueryTable(string strSql, SugarParameter[] parameters = null);
+
+        Task<string> UseProc(string procName, List<SugarParameter> parameters = null);
 
         Task<List<TEntity>> Query(
             Expression<Func<TEntity, bool>> whereExpression, int intPageIndex, int intPageSize, string strOrderByFileds);

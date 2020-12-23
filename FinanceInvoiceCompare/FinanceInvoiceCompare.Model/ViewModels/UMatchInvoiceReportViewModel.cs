@@ -59,6 +59,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string VendorChName { get; set; }
 
+
         public float? Check { get; set; }
     }
 }

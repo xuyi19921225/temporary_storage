@@ -235,13 +235,6 @@ export default {
       }
     }
   },
-  // computed: {
-  //   'dialogData.companyCode': {
-  //     set: function() {
-  //       this.dialogData.companyCode = this.listQuery.companyCode
-  //     }
-  //   }
-  // },
   created() {
     this.getList()
   },

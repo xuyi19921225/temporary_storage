@@ -10,7 +10,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public DateTime InvoiceDate { get; set; }
 
-        public float Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [SugarColumn(IsOnlyIgnoreUpdate = true)]
         public DateTime EntryDate { get; set; } = DateTime.Now;

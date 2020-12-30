@@ -146,7 +146,7 @@
       </el-table-column>
       <el-table-column label="Check" width="120" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.check.toFixed(2) }}</span>
+          <span>{{ row.check }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Data Source" width="150" align="center">

@@ -94,7 +94,7 @@ namespace FinanceInvoiceCompare.WebApi.Repository
                     Amount = p1.Amount,
                     CompanyCode = p1.CompanyCode,
                     MatchDate = p1.MatchDate,
-                    Check = SqlFunc.IIF(p2.AmountInDC == null, p1.Amount, p1.Amount + p2.AmountInDC),
+                    Check =  SqlFunc.IIF(p2.AmountInDC == null, p1.Amount, p1.Amount + p2.AmountInDC),
                     DataSource = p1.DataSource,
                     Cocd = p2.Cocd,
                     Reference = p2.Reference,

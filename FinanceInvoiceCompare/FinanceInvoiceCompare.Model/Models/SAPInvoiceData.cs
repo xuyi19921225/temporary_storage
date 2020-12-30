@@ -26,7 +26,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string Curr { get; set; }
 
-        public float AmountInDC { get; set; }
+        public decimal AmountInDC { get; set; }
 
         public string PBk { get; set; }
 
@@ -36,7 +36,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public DateTime BlineDate { get; set; }
 
-        public float AmtLC2 { get; set; }
+        public decimal AmtLC2 { get; set; }
 
         public string Assign { get; set; }
 

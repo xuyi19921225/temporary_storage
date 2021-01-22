@@ -84,7 +84,14 @@
         </member>
         <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetSiteInvoiceList(FinanceInvoiceCompare.WebApi.Model.SiteInvoiceRequestModel)">
             <summary>
-            获取Site发票信息
+            获取Site发票信息(分页)
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.GetAllSiteInvoiceList(FinanceInvoiceCompare.WebApi.Model.SiteInvoiceRequestModel)">
+            <summary>
+            获取所有Site发票信息
             </summary>
             <param name="model">model</param>
             <returns></returns>
@@ -94,6 +101,12 @@
             更新发票
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.InvoiceController.MatchInvoice">
+            <summary>
+            手动匹配发票
+            </summary>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.LoginController">
@@ -268,6 +281,34 @@
             保存角色和菜单的授权关系
             </summary>
             <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.TaxCodeController.Get(FinanceInvoiceCompare.WebApi.Model.RequestModels.TaxCodeRequestModel)">
+            <summary>
+            获取税码信息
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.TaxCodeController.Post(FinanceInvoiceCompare.WebApi.Model.TaxCode)">
+            <summary>
+            添加一个税码
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.TaxCodeController.Put(FinanceInvoiceCompare.WebApi.Model.TaxCode)">
+            <summary>
+            更新一个税码
+            </summary>
+            <param name="model">model</param>
+            <returns></returns>
+        </member>
+        <member name="M:FinanceInvoiceCompare.WebApi.Controllers.TaxCodeController.Delete(System.Int32)">
+            <summary>
+            删除一个税码
+            </summary>
+            <param name="id">id</param>
             <returns></returns>
         </member>
         <member name="T:FinanceInvoiceCompare.WebApi.Controllers.UserCompanyController">

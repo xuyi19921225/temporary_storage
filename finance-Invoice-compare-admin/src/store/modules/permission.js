@@ -13,7 +13,8 @@ const map = {
   matchReport: () => import('@/views/report/match-invoice/index'),
   unMatchReport: () => import('@/views/report/unmatch-invoice/index'),
   compareReport: () => import('@/views/report/compare-invoice/index'),
-  payment: () => import('@/views/report/payment/index')
+  payment: () => import('@/views/report/payment/index'),
+  taxCode: () => import('@/views/system/tax-code/index')
 }
 
 const state = {

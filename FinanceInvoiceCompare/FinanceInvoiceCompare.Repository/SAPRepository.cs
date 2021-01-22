@@ -25,6 +25,10 @@ namespace FinanceInvoiceCompare.WebApi.Repository
             .Where((a1) => a1.IsDelete == false)
             .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (a1) => a1.Reference.Contains(model.InvoiceNumber))
             .WhereIF(!string.IsNullOrEmpty(model.CompanyCode), (a1) => a1.Cocd.Contains(model.CompanyCode))
+            .WhereIF(model.PstingBeginDate!=null, (a1) => a1.PstngDate>= model.PstingBeginDate)
+            .WhereIF(model.PstingEndDate != null, (a1) => a1.PstngDate <= model.PstingEndDate)
+            .WhereIF(model.DocBeginDate != null, (a1) => a1.DocDate >= model.DocBeginDate)
+            .WhereIF(model.DocEndDate != null, (a1) => a1.DocDate <= model.DocEndDate)
             .Select((a1, b2, c3) => new SAPInvoiceData 
             {
                 Id=a1.Id,
@@ -59,6 +63,10 @@ namespace FinanceInvoiceCompare.WebApi.Repository
               .Where(it => it.IsDelete == false)
               .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), it => it.Reference.Contains(model.InvoiceNumber))
               .WhereIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.Cocd.Contains(model.CompanyCode))
+              .WhereIF(model.PstingBeginDate != null, it => it.PstngDate >= model.PstingBeginDate)
+              .WhereIF(model.PstingEndDate != null, it => it.PstngDate <= model.PstingEndDate)
+              .WhereIF(model.DocBeginDate != null, it => it.DocDate >= model.DocBeginDate)
+              .WhereIF(model.DocEndDate != null, it => it.DocDate <= model.DocEndDate)
               .GroupBy(it => new { it.Reference, it.Cocd })
               .Select(it => new SAPInvoiceData { Cocd = it.Cocd, Reference = it.Reference, Check = SqlFunc.AggregateCount(it.Id) });
 
@@ -117,6 +125,10 @@ namespace FinanceInvoiceCompare.WebApi.Repository
             .Where((a1) => a1.IsDelete == false)
             .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), (a1) => a1.Reference.Contains(model.InvoiceNumber))
             .WhereIF(!string.IsNullOrEmpty(model.CompanyCode), (a1) => a1.Cocd.Contains(model.CompanyCode))
+            .WhereIF(model.PstingBeginDate != null, (a1) => a1.PstngDate >= model.PstingBeginDate)
+            .WhereIF(model.PstingEndDate != null, (a1) => a1.PstngDate <= model.PstingEndDate)
+            .WhereIF(model.DocBeginDate != null, (a1) => a1.DocDate >= model.DocBeginDate)
+            .WhereIF(model.DocEndDate != null, (a1) => a1.DocDate <= model.DocEndDate)
             .Distinct()
             .Select((a1, b2, c3) => new SAPInvoiceData
             {
@@ -152,6 +164,10 @@ namespace FinanceInvoiceCompare.WebApi.Repository
               .Where(it => it.IsDelete == false)
               .WhereIF(!string.IsNullOrEmpty(model.InvoiceNumber), it => it.Reference.Contains(model.InvoiceNumber))
               .WhereIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.Cocd.Contains(model.CompanyCode))
+              .WhereIF(model.PstingBeginDate != null, it => it.PstngDate >= model.PstingBeginDate)
+              .WhereIF(model.PstingEndDate != null, it => it.PstngDate <= model.PstingEndDate)
+              .WhereIF(model.DocBeginDate != null, it => it.DocDate >= model.DocBeginDate)
+              .WhereIF(model.DocEndDate != null, it => it.DocDate <= model.DocEndDate)
               .GroupBy(it => new { it.Reference, it.Cocd })
               .Select(it => new SAPInvoiceData { Cocd = it.Cocd, Reference = it.Reference, Check = SqlFunc.AggregateCount(it.Id) });
 

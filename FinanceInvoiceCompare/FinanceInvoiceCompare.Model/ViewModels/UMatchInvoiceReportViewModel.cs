@@ -26,7 +26,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
 
         public string Vendor { get; set; }
 
-
+        public string CoupaID { get; set; }
         public string Reference { get; set; }
 
         public string DocumentNo { get; set; }

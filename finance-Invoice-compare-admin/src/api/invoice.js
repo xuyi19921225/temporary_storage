@@ -40,11 +40,27 @@ export function getSiteInvoiceList(params) {
   })
 }
 
+export function getAllSiteInvoiceList(params) {
+  return request({
+    url: '/invoice/getAllSiteInvoiceList',
+    method: 'get',
+    params
+  })
+}
+
 export function saveInvoice(data) {
   return request({
     url: '/invoice/saveInvoice',
     method: 'put',
     data
+  })
+}
+
+export function matchInvoice(params) {
+  return request({
+    url: '/invoice/matchInvoice',
+    method: 'get',
+    params
   })
 }
 

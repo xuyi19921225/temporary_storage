@@ -57,6 +57,18 @@ namespace FinanceInvoiceCompare.WebApi.Service
             return await invoiceRepository.GetAllCompareMatchInvoiceReport(model);
         }
 
+
+        /// <summary>
+        /// 使用存储过程
+        /// </summary>
+        /// <param name="proc"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public async Task<string> MatchInvoice(string proc,List<SqlSugar.SugarParameter> parameters=null) 
+        {
+            return await invoiceRepository.UseProc(proc, parameters);
+        }
+
         /// <summary>
         /// 获取付款发票信息
         /// </summary>

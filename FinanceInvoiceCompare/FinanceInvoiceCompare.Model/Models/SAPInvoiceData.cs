@@ -51,6 +51,10 @@ namespace FinanceInvoiceCompare.WebApi.Model
         [SugarColumn(IsIgnore = true)]
         public string VendorChName { get; set; }
 
+
+        [SugarColumn(IsIgnore = true)]
+        public decimal? Rate { get; set; }
+
         [SugarColumn(IsIgnore = true)]
         public string IsMatch { get; set; }
 

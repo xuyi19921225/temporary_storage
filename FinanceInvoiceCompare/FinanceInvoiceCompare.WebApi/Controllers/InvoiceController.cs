@@ -236,7 +236,7 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         }
 
         /// <summary>
-        /// 获取Site发票信息
+        /// 获取Site发票信息(分页)
         /// </summary>
         /// <param name="model">model</param>
         /// <returns></returns>
@@ -248,13 +248,39 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
             var expressions = Expressionable.Create<Invoice>()
                  .And(it => it.IsDelete == false)
                  .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode == model.CompanyCode)
-                 .AndIF(!string.IsNullOrEmpty(model.InvoiceNumber), it => it.InvoiceNumber.Contains(model.InvoiceNumber)).ToExpression();
+                 .AndIF(model.InvoiceBeginDate != null, it => it.InvoiceDate >= model.InvoiceBeginDate)
+                 .AndIF(model.InvoiceEndDate != null, it => it.InvoiceDate <= model.InvoiceEndDate).ToExpression();
 
             return new MessageModel<PageModel<Invoice>>()
             {
                 Message = "获取信息成功",
                 Success = true,
                 Response = await invoiceService.QueryPage(expressions, model.PageIndex, model.PageSize, " ID desc ")
+            };
+        }
+
+        /// <summary>
+        /// 获取所有Site发票信息
+        /// </summary>
+        /// <param name="model">model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("GetAllSiteInvoiceList")]
+        public async Task<MessageModel<List<Invoice>>> GetAllSiteInvoiceList([FromQuery] SiteInvoiceRequestModel model)
+        {
+            var expressions = Expressionable.Create<Invoice>()
+                 .And(it => it.IsDelete == false)
+                 .AndIF(!string.IsNullOrEmpty(model.CompanyCode), it => it.CompanyCode == model.CompanyCode)
+                 .AndIF(!string.IsNullOrEmpty(model.InvoiceNumber), it => it.InvoiceNumber.Contains(model.InvoiceNumber))
+                 .AndIF(model.InvoiceBeginDate != null, it => it.InvoiceDate >= model.InvoiceBeginDate)
+                 .AndIF(model.InvoiceEndDate != null, it => it.InvoiceDate <= model.InvoiceEndDate).ToExpression();
+
+            return new MessageModel<List<Invoice>>()
+            {
+                Message = "获取信息成功",
+                Success = true,
+                Response = await invoiceService.Query(expressions, " ID desc ")
             };
         }
 
@@ -272,9 +298,38 @@ namespace FinanceInvoiceCompare.WebApi.Controllers
         {
             var data = new MessageModel<string>();
 
-            var flag = data.Success = await invoiceService.Update(model, new List<string>() { "InvoiceNumber", "InvoiceDate", "InvoiceDate", "Amount", "UpdatedBy", "UpdatedAt" });
+            var flag = data.Success = await invoiceService.Update(model, new List<string>() { "InvoiceNumber", "InvoiceDate", "InvoiceDate","CoupaID","Amount", "UpdatedBy", "UpdatedAt" });
             if (flag)
             {
+                data.Message = "更新成功";
+            }
+            else
+            {
+                data.Message = "更新失败";
+            }
+
+            return data;
+        }
+
+
+        /// <summary>
+        /// 手动匹配发票
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize]
+        [Route("MatchInvoice")]
+
+        public async Task<MessageModel<string>> MatchInvoice()
+        {
+            var data = new MessageModel<string>();
+
+            var flag = await invoiceService.MatchInvoice("Proc_Check_Invoice",null);
+
+
+            if (flag.ToLower()=="success")
+            {
+                data.Success = true;
                 data.Message = "更新成功";
             }
             else

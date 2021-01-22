@@ -9,5 +9,9 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public string CompanyCode { get; set; }
 
         public string InvoiceNumber { get; set; }
+
+        public DateTime? InvoiceBeginDate { get; set; }
+
+        public DateTime? InvoiceEndDate { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace FinanceInvoiceCompare.WebApi.Model
         public string CompanyCode { get; set; }
         public string InvoiceNumber { get; set; }
 
+        public string CoupaID { get; set; }
         public DateTime InvoiceDate { get; set; }
 
         public decimal Amount { get; set; }

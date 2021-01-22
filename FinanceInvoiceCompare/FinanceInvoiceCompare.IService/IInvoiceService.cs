@@ -18,5 +18,7 @@ namespace FinanceInvoiceCompare.WebApi.IService
         Task<PageModel<Payment>> GetInvoicePaymentReport(MatchInvoiceReportRequestModel model);
 
         Task<List<Payment>> GetAllInvoicePaymentReport(MatchInvoiceReportRequestModel model);
+
+        Task<string> MatchInvoice(string proc, List<SqlSugar.SugarParameter> parameters = null);
     }
 }

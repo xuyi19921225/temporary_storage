@@ -1,25 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.invoiceNumber" style="width: 150px;" placeholder="发票号码" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-input v-model="listQuery.companyCode" style="width: 150px;" placeholder="公司编码" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select
-        v-model="listQuery.isMatch"
-        class="filter-item"
-        style="width: 150px;"
-        placeholder="是否匹配"
-        clearable
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in isMatchList"
-          :key="item.id"
-          :label="item.match"
-          :value="item.match"
-        />
-      </el-select>
-      <el-input v-model.number="listQuery.check" style="width: 150px;" placeholder="check" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-search" @click="handleFilter">
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         查询
       </el-button>
       <el-upload
@@ -40,6 +22,98 @@
       <el-button v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-download" :loading="downloading" @click="exportExcel">
         导出EXCEL
       </el-button>
+    </div>
+    <div class="filter-container">
+      <el-form :model="listQuery" label-width="100px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item
+              label="Psting Date"
+            >
+              <el-date-picker
+                v-model="listQuery.pstingBeginDate"
+                type="date"
+                placeholder="开始日期"
+                :picker-options="pstBeginDate"
+                value-format="yyyy-MM-dd"
+              />--
+              <el-date-picker
+                v-model="listQuery.pstingEndDate"
+                type="date"
+                placeholder="结束日期"
+                :picker-options="pstEndDate"
+                value-format="yyyy-MM-dd"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Doc date">
+              <el-date-picker
+                v-model="listQuery.docBeginDate"
+                type="date"
+                placeholder="开始日期"
+                :picker-options="docBeginDateOptions"
+                value-format="yyyy-MM-dd"
+              />--
+              <el-date-picker
+                v-model="listQuery.docEndDate"
+                type="date"
+                placeholder="结束日期"
+                :picker-options="docEndDateOptions"
+                value-format="yyyy-MM-dd"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="发票号码">
+              <el-input v-model="listQuery.invoiceNumber" @keyup.enter.native="handleFilter" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="公司编码">
+              <el-select
+                v-model="listQuery.companyCode"
+                placeholder="--请选择--"
+                clearable
+                style="width:100%"
+                @change="handleFilter"
+              >
+                <el-option
+                  v-for="item in companyCodeList"
+                  :key="item.Id"
+                  :label="item.code"
+                  :value="item.code"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="是否匹配">
+              <el-select
+                v-model="listQuery.isMatch"
+                placeholder="--请选择--"
+                clearable
+                style="width:100%"
+                @change="handleFilter"
+              >
+                <el-option
+                  v-for="item in isMatchList"
+                  :key="item.id"
+                  :label="item.match"
+                  :value="item.match"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="Check">
+              <el-input v-model="listQuery.check" @keyup.enter.native="handleFilter" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
     </div>
 
     <el-table
@@ -162,8 +236,13 @@ export default {
         invoiceNumber: '',
         companyCode: '',
         isMatch: '',
-        check: ''
+        check: '',
+        pstingBeginDate: '',
+        pstingEndDate: '',
+        docBeginDate: '',
+        docEndDate: ''
       },
+      companyCodeList: this.$store.getters.company,
       filename: 'SAP发票信息',
       autoWidth: true,
       bookType: 'xlsx',
@@ -177,8 +256,35 @@ export default {
           id: 1,
           match: 'N'
         }
-      ]
-
+      ],
+      pstBeginDate: {
+        disabledDate: time => {
+          if (this.listQuery.pstingEndDate) {
+            return time.getTime() > Date.parse(this.listQuery.pstingEndDate)
+          }
+        }
+      },
+      pstEndDate: {
+        disabledDate: time => {
+          if (this.listQuery.pstingBeginDate) {
+            return time.getTime() < Date.parse(this.listQuery.pstingBeginDate)
+          }
+        }
+      },
+      docBeginDateOptions: {
+        disabledDate: time => {
+          if (this.listQuery.docEndDate) {
+            return time.getTime() > Date.parse(this.listQuery.docEndDate)
+          }
+        }
+      },
+      docEndDateOptions: {
+        disabledDate: time => {
+          if (this.listQuery.docBeginDate) {
+            return time.getTime() < Date.parse(this.listQuery.docBeginDate)
+          }
+        }
+      }
     }
   },
   created() {
